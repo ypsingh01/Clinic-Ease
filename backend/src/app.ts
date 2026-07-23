@@ -23,9 +23,30 @@ export function createApp() {
   const app = express()
   app.set('trust proxy', 1)
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
+
+  const allowedOrigins = env.CLIENT_ORIGIN.split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+
   app.use(
     cors({
-      origin: env.CLIENT_ORIGIN.split(',').map((s) => s.trim()),
+      origin(origin, callback) {
+        // Non-browser / same-origin tools
+        if (!origin) {
+          callback(null, true)
+          return
+        }
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true)
+          return
+        }
+        // Free-tier: allow any Vercel deployment URL so preview/prod both work
+        if (env.FREE_TIER && /\.vercel\.app$/i.test(new URL(origin).hostname)) {
+          callback(null, true)
+          return
+        }
+        callback(new Error(`CORS blocked for origin: ${origin}`))
+      },
       credentials: true,
     }),
   )

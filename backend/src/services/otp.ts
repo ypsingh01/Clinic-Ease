@@ -17,9 +17,16 @@ export function generateOtpCode() {
 }
 
 export async function sendSmsOtp(phone: string, code: string) {
-  if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_SMS_FROM) {
-    if (isStrictProduction) throw new HttpError(500, 'SMS OTP is not configured')
-    logger.info({ phone, code }, 'otp:dev-log (Twilio SMS not configured — free tier / local)')
+  const twilioReady = Boolean(
+    env.TWILIO_ACCOUNT_SID && env.TWILIO_AUTH_TOKEN && env.TWILIO_SMS_FROM,
+  )
+
+  // Free-tier: always mock SMS so signup never 500s on bad Twilio config
+  if (isFreeTier || !twilioReady) {
+    if (isStrictProduction && !twilioReady) {
+      throw new HttpError(500, 'SMS OTP is not configured')
+    }
+    logger.info({ phone, code }, 'otp:dev-log (SMS mocked — free tier / local)')
     return 'sent'
   }
 

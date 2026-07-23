@@ -32,11 +32,18 @@ export async function api<T>(
   }
   if (authToken) headers.set('Authorization', `Bearer ${authToken}`)
 
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers,
-    body: options.json !== undefined ? JSON.stringify(options.json) : options.body,
-  })
+  let res: Response
+  try {
+    res = await fetch(`${API_URL}${path}`, {
+      ...options,
+      headers,
+      body: options.json !== undefined ? JSON.stringify(options.json) : options.body,
+    })
+  } catch {
+    throw new Error(
+      'Cannot reach the API (cold start or network). Wait ~30s and try again.',
+    )
+  }
 
   const data = await res.json().catch(() => ({}))
   if (!res.ok) {

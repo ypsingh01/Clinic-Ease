@@ -40,12 +40,16 @@ export function requireCaptcha(field = 'captchaToken') {
 }
 
 export async function audit(kind: string, meta: Record<string, unknown>, req?: Request) {
-  await prisma.auditEvent.create({
-    data: {
-      kind,
-      ip: req?.ip,
-      userId: req?.user?.id,
-      meta: JSON.stringify(meta),
-    },
-  })
+  try {
+    await prisma.auditEvent.create({
+      data: {
+        kind,
+        ip: req?.ip,
+        userId: req?.user?.id,
+        meta: JSON.stringify(meta),
+      },
+    })
+  } catch {
+    // Never break auth/booking because audit logging failed
+  }
 }

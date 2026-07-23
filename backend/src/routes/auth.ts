@@ -95,8 +95,19 @@ authRouter.post(
         })
         .catch(mapPrismaAuthError)
 
-      await issueAndSendOtp(phone, 'register', user.id)
-      await audit('auth.register', { userId: user.id }, req)
+      try {
+        await issueAndSendOtp(phone, 'register', user.id)
+      } catch (otpErr) {
+        // User already exists — surface a clear OTP error instead of generic 500
+        throw otpErr instanceof HttpError
+          ? otpErr
+          : new HttpError(502, 'Account created but OTP could not be sent. Try phone login.')
+      }
+      try {
+        await audit('auth.register', { userId: user.id }, req)
+      } catch {
+        // Non-fatal — do not fail signup on audit write
+      }
 
       res.status(201).json({
         pendingPhone: phone,

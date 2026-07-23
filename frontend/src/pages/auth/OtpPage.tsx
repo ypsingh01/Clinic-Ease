@@ -13,7 +13,10 @@ export function OtpPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  if (!pendingPhone && !sessionStorage.getItem('clinicease.pendingUser')) {
+  const storedPhone = sessionStorage.getItem('clinicease.pendingPhone')
+  const displayPhone = pendingPhone ?? storedPhone
+
+  if (!pendingPhone && !storedPhone && !sessionStorage.getItem('clinicease.pendingUser')) {
     return <Navigate to="/login" replace />
   }
 
@@ -25,8 +28,8 @@ export function OtpPage() {
       const user = await verifyOtp(code)
       toast.push({
         tone: 'success',
-        title: 'WhatsApp linked',
-        description: 'You will get confirmations and live ETA updates.',
+        title: 'Phone verified',
+        description: 'You are signed in.',
       })
       navigate(homePathForRole(user.role))
     } catch (err) {
@@ -41,8 +44,8 @@ export function OtpPage() {
       <h1 className="font-display text-2xl font-medium">Enter OTP</h1>
       <p className="text-text-secondary mt-2 text-sm leading-relaxed">
         We sent a code to{' '}
-        <span className="text-text font-medium">{pendingPhone ?? 'your phone'}</span>. Demo:
-        any 4+ digits work.
+        <span className="text-text font-medium">{displayPhone ?? 'your phone'}</span>.
+        Demo free-tier code: <span className="font-mono font-medium">123456</span>
       </p>
 
       <Card className="mt-8" padding="lg">
@@ -52,7 +55,7 @@ export function OtpPage() {
               id="otp-code"
               inputMode="numeric"
               autoComplete="one-time-code"
-              placeholder="••••••"
+              placeholder="123456"
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
               className="font-mono tracking-[0.35em]"

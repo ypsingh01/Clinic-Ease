@@ -7,9 +7,12 @@ function twilioAuthHeader() {
   return Buffer.from(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`).toString('base64')
 }
 
-/** Fixed OTP_DEV_CODE in free-tier/dev; random otherwise. */
+/** Fixed OTP when OTP_DEV_CODE set (free-tier/local). Random otherwise. */
 export function generateOtpCode() {
-  if (env.OTP_DEV_CODE && (!isStrictProduction || isFreeTier)) return env.OTP_DEV_CODE
+  const dev = env.OTP_DEV_CODE?.trim()
+  if (dev && (!isStrictProduction || isFreeTier)) return dev
+  // Free tier without OTP_DEV_CODE still needs a predictable demo code
+  if (isFreeTier) return '123456'
   return String(crypto.randomInt(100000, 999999))
 }
 

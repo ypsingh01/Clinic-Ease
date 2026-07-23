@@ -127,6 +127,15 @@ export function createApp() {
       res.status(400).json({ error: 'Validation failed', requestId })
       return
     }
+    if (
+      err &&
+      typeof err === 'object' &&
+      'code' in err &&
+      (err as { code: string }).code === 'P2002'
+    ) {
+      res.status(409).json({ error: 'Email or phone already registered', requestId })
+      return
+    }
     logger.error({ err, requestId }, 'unhandled')
     res.status(500).json({ error: 'Internal server error', requestId })
   })

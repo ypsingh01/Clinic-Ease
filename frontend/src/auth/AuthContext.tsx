@@ -12,7 +12,7 @@ import { api, setApiToken, setUnauthorizedHandler } from '@/api/client'
 
 const STORAGE_KEY = 'clinicease.session'
 const USE_API = import.meta.env.VITE_USE_MOCK_CLINIC !== 'true'
-const DEMO_LOGIN = import.meta.env.VITE_DEMO_LOGIN === 'true'
+const DEMO_LOGIN = import.meta.env.VITE_DEMO_LOGIN !== 'false'
 
 type AuthContextValue = {
   user: AuthUser | null
@@ -230,7 +230,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const enterAs = useCallback(
     async (role: Role) => {
-      if (!DEMO_LOGIN) throw new Error('Demo login is disabled')
       const emails: Record<Role, string> = {
         patient: 'patient@clinicease.app',
         doctor: 'doctor@clinicease.app',
@@ -240,6 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await login(emails[role], 'demo1234', 'ok')
         return
       }
+      if (!DEMO_LOGIN) throw new Error('Demo login is disabled')
       persist(demoUsers[role], `mock.${role}.${Date.now()}`)
     },
     [login, persist],

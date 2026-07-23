@@ -1,8 +1,10 @@
 import rateLimit from 'express-rate-limit'
 
+const freeTier = process.env.FREE_TIER === 'true'
+
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: freeTier ? 300 : 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many auth attempts. Try again later.' },
@@ -10,7 +12,7 @@ export const authLimiter = rateLimit({
 
 export const bookingLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  max: 30,
+  max: freeTier ? 80 : 30,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many booking requests. Slow down.' },
@@ -18,7 +20,7 @@ export const bookingLimiter = rateLimit({
 
 export const publicLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  max: 40,
+  max: freeTier ? 120 : 40,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests.' },

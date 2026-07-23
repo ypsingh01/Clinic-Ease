@@ -1,14 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/cn'
 
 type RecaptchaStubProps = {
   onChange?: (ok: boolean) => void
   className?: string
+  defaultChecked?: boolean
 }
 
 /** Frontend-only stand-in for Google reCAPTCHA until backend keys land */
-export function RecaptchaStub({ onChange, className }: RecaptchaStubProps) {
-  const [checked, setChecked] = useState(false)
+export function RecaptchaStub({ onChange, className, defaultChecked = false }: RecaptchaStubProps) {
+  const [checked, setChecked] = useState(defaultChecked)
+
+  useEffect(() => {
+    if (defaultChecked) onChange?.(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount once for default
+  }, [])
 
   return (
     <button

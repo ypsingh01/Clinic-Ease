@@ -8,7 +8,7 @@ import type { Role } from '@/auth/types'
 import { useI18n } from '@/i18n/I18nContext'
 import { fadeUp } from '@/motion/variants'
 
-const DEMO_LOGIN = import.meta.env.VITE_DEMO_LOGIN === 'true'
+const DEMO_LOGIN = import.meta.env.VITE_DEMO_LOGIN !== 'false'
 
 type Mode = 'email' | 'phone'
 

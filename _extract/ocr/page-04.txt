@@ -1,0 +1,38 @@
+2.2 Core Database Entities (Conceptual)
+
+« users (id, name, email, phone, password_hash, role[patient/doctor/admin])
+
+« doctors (id, user_id FK, specialty, bio, photo_url, consultation_fee,
+avg_consultation_minutes — rolling average, updated after each completed
+appointment)
+
+« doctor_availability (id, doctor_id FK, day_of_week, start_time, end_time,
+hourly_capacity — replaces fixed slot_duration_minutes; capacity derived from
+avg_consultation_minutes but doctor-overridable)
+
++ doctor_leaves (id, doctor_id FK, date, reason)
+
+« appointments (id, patient_id FK, doctor_id FK, booked_for_dependent_id — nullable
+FK to dependents, hour_block_start, queue_position — token number within the
+hour block, estimated_time — recalculated dynamically, actual_start_time,
+actual_end_time, status[held/booked/in_progress/completed/cancelled/no_show],
+payment_id FK, created_by_admin flag)
+
+« payments (id, appointment _id FK, razorpay_order_id, razorpay_payment_id, amount,
+status)
+
+« notifications (id, user_id FK, type[in_app/whatsapp], message, status, sent_at)
+
+« queue_delay_offsets (id, doctor_id FK, date, offset_minutes, reason) — tracks manual
+"running late" adjustments applied to a day's queue
+
+« waitlist (id, patient_id FK, doctor_id FK, date, hour_block_start, position,
+status[waiting/notified/claimed/expired], created_at)
+
+« dependents (id, patient_user_id FK, name, relation, date_of_birth, gender)
+
+« symptom _specialty_map (id, symptom_keyword, specialty) — small curated lookup
+table; no ML needed given a fixed roster of 5-6 doctors
+
+(Full schema with constraints/indexes to be detailed in a dedicated schema doc — happy to
+build that next.)

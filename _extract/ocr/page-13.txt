@@ -1,0 +1,56 @@
+« FR23: Patient "check-in" action (self via app, or admin-assisted) that marks arrival and
+starts the queue clock — distinct from "booked"
+
+« FR24: [4 Family/dependent profiles — confirmed, see above
+
+Must-Have Additions (Non-Functional)
+
+» NFR: Compliance framework aligned to India's Digital Personal Data Protection
+(DPDP) Act, 2023 — explicit consent capture at registration, data minimization,
+documented retention policy (not HIPAA, which is US-specific)
+
+Recommended Additions (Should-Have)
+
+«Multi-channel reminder fallback — auto-fallback to SMS if WhatsApp delivery fails
+
+« E-prescription / visit summary — doctor adds brief notes on completion, patient
+downloads as PDF
+
+» Admin audit log — every manual override (walk-in insertion, delay offset, manual
+cancellation) timestamped with the acting admin
+
+« Embeddable Google/website booking widget — a shareable booking link for the
+clinic's Google Business profile and site
+
+Optional / Nice-to-Have (Explicitly deferred to v2+ unless client requests)
+
+« Video/teleconsultation module (high build cost — WebRTC, bandwidth; confirm
+client need first)
+
+« Insurance verification workflow (low relevance for cash-pay Indian clinic context)
+
+« Public doctor/clinic reviews (moderation overhead, low value for an already-
+established single clinic)
+
+«Voice call reminders (needs a telephony vendor — add only if WhatsApp/SMS
+delivery proves insufficient)
+
+« Kiosk self check-in hardware (elegant, but a physical-hardware v2 upgrade, nota vl
+build item)
+
+« Loyalty/referral system (low urgency — single dedicated clinic, not a patient-
+acquisition marketplace)
+
+Other Non-Functional Hardening Worth Locking In Early
+
+. Rate limiting / bot protection — confirmed, see above (Feature 13)
+
+«Graceful WhatsApp API degradation — silent fallback to in-app + SMS if the provider
+APIisdown
+
+« Basicaccessibility (contrast, font size, tap target size)
+
+« Hindi/English bilingual UI toggle — cheap if planned from the start using a React i18n
+library, expensive to retrofit later
+
+This document is meant to evolve — recommended next artifacts:

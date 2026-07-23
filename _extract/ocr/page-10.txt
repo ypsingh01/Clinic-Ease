@@ -1,0 +1,36 @@
+Feature 12: Doctor Performance & Queue Analytics
+What: An analytics view for Admin (and optionally each doctor, for their own data)
+showing punctuality (estimated vs. actual consultation times), a busiest-hours heatmap,
+no-show trends, and waitlist conversion rate. Why it matters: The queue/ETA system
+generates a lot of useful operational data — this feature is what turns that data into
+decisions (e.g., "Dr. X's capacity setting of 12/hour is unrealistic; actual average is 8 minutes,
+not 5"). Implementation logic:
++ Punctuality: aggregate vs. the
+assumed at booking time, per doctor per day/week
+« Heatmap: COUNT of appointments grouped by hour-of-day and day-of-week
+« No-show trend: rate of| status over time, filterable by doctor
+» Waitlist conversion: percentage of waitlist offers that were claimed vs. expired
+« All of this is achievable with standard SQL aggregate queries on the existing
+and tables — no separate analytics service needed at this
+scale
+Feature 13: Rate Limiting & Bot Protection
+What: Protects public-facing endpoints (registration, booking, symptom checker) from
+automated abuse — fake token spam, scripted registration floods, or scraping. Why it
+matters: A booking system with real payment and limited daily capacity is a natural target
+for abuse (e.g., a script grabbing every token in a popular doctor's queue). This needs to be
+designed in from the start, not bolted on after an incident. Implementation logic:
++ API-level rate limiting middleware (e.g.,(express-rate-1init)) on (/api/auth/*),
+(create), and (7api/symptom-check), keyed by IP and/or account
+« CAPTCHA (e.g., Google reCAPTCHA v3, invisible/low-friction) on registration and
+the booking confirmation step
+« Phone OTP verification (already required for WhatsApp linkage) doubles as a natural
+bot deterrent, since it requires a real, reachable phone number
+« Logand alert on unusual patterns (e.g., many bookings from one IP in a short window)
+for Admin visibility
+SDLC PHASE 4: IMPLEMENTATION PLAN (Build Order)
+1. Setup — repo structure, DB connection, environment config, base auth
+(register/login JWT)
+2. Doctor & Availability Module — CRUD for doctors (admin), availability rules, hourly
+capacity, hour-block generation logic
+3. Booking Engine — token holding/assignment, ETA calculation,
+cancellation/reschedule, concurrency handling 3a. Dynamic ETA Engine — rolling

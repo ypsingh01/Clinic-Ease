@@ -1,0 +1,30 @@
+1.4 Non-Functional Requirements
+Category Requirement
+Performance Handle 100+ bookings/week comfortably; slot queries return in <500ms
+Reliability No double-booking under concurrent requests (transactional integrity)
+Usability Mobile-responsive; booking flow completable in under 3 minutes
+Security Passwords hashed (berypt); JWT-based auth; role-based access control (RBAC);
+rate limiting + CAPTCHA on public booking/registration endpoints to prevent
+bot/fake token abuse
+Availability System usable during clinic hours without manual intervention
+Data Privacy Patient medical/contact data access restricted by role
+Maintainability Modular codebase (routes/controllers/services separated) for future feature
+additions
+Transparency ~~ ETAs are always communicated as estimates/windows, never guarantees, to
+manage patient expectations
+1.5 Out of Scope (v1)
+« Multi-clinic/multi-branch support
+« Doctor self-signup (Admin creates doctor accounts)
+» Video consultations
+« Insurance/claims processing
+SDLC PHASE 2: SYSTEM DESIGN
+2.1 High-Level Architecture
+React (Vite) SPA <—HTTPS/WebSocket—> Node.js/Express API <—>
+PostgreSQL
+|
+|—> Razorpay (payment +
+webhook)
+—> Twilio WhatsApp API
+(notifications)
+—> node-cron (reminder
+scheduler)

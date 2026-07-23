@@ -1,0 +1,48 @@
+« Push updated ETAs via Socket.io (in-app) and a WhatsApp template message to
+
+affected patients — always phrased as an estimate/window, never a guarantee
+Feature 3: Booking Flow & Payment Integration
+‘What: Patient picks doctor - date - hour block -> confirms -> pays via Razorpay - gets a
+token number and estimated time. Why it matters: Payment failure/edge cases (user closes
+tab mid-payment, payment succeeds but webhook is delayed) must not corrupt
+appointment state. Implementation logic:
+
+« Create Razorpay order server-side first, then open checkout client-side (never trust
+client-only payment confirmation)
+
+« Confirm booking only after Razorpay webhook verifies payment signature server-
+side — not just the client-side success callback
+
+« Handle webhook idempotency (Razorpay may retry webhooks) using the payment ID
+as a unique constraint
+
+Feature 4: Notifications (In-App + WhatsApp)
+
+What: Booking confirmations, reminders (24h/1h before estimated time), cancellations,
+reschedules, and live ETA-shift updates (queue moved up/delayed) all trigger both an in-
+app notification and a WhatsApp message. Why it matters: This directly delivers the "60%
+reduction in manual scheduling effort" value proposition — it's the automation payoff.
+Implementation logic:
+
++ In-app:insertarow into (notifications)table; frontend polls or listens via Socket.io for
+new ones
+
++ WhatsApp: use Twilio's WhatsApp Business API with pre-approved message
+templates (required for anything outside a 24h user-initiated session window)
+
++ Reminder scheduling: a job runs every 15 minutes, queries appointments
+starting in ~24h or ~1h windows that haven't been reminded yet, and fires
+notifications
+
+Feature 5: Patient Dashboard
+What: Upcoming appointments, past history, reschedule/cancel actions, notification center.
+Implementation logic:
+
+« Reschedule = cancel old token (release it, shift queue behind it) + create new held
+token in a different block, in one transaction
+
+« Cancellation policy enforcement (e.g., no cancellation within 2 hours of appointment)
+handled server-side, not just Ul-disabled buttons
+
+» Patient view shows both the estimated time and a live "currently serving token #N"
+indicator so a shifting ETA reads as normal system behavior, not an error

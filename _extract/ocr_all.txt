@@ -1,0 +1,618 @@
+
+
+===== page-01.png =====
+
+ClinicEase - Appointment Booking Platform
+Requirement Analysis & SDLC Documentation
+Project Type: Single Clinic, Multi-Doctor (5-6 doctors) Appointment Booking System
+Roles: Patient, Doctor, Admin Stack: React (frontend), Node.js/Express (backend),
+PostgreSQL (database) Notifications: In-app + WhatsApp Payments: Razorpay (pay-at-
+booking) Deployment: Deferred (build-first approach)
+SDLC PHASE 1: REQUIREMENT ANALYSIS
+1.1 Purpose
+ClinicEase digitizes appointment scheduling for a clinic with 5-6 doctors, replacing
+manual/phone-based booking with a self-serve online system that reduces admin
+workload, prevents double-booking, and keeps patients informed automatically.
+1.2 Stakeholders
+Stakeholder Interest
+Patient Book/manage appointments easily, get reminders
+Doctor Control availability, see daily patient load
+Admin/Reception Oversee all bookings, handle walk-ins/edge cases, view revenue
+Clinic Owner (client) Reduced no-shows, less phone workload, professional online presence
+1.3 Functional Requirements (By Role)
+Patient
+« FRI: Register/login via email + phone (OTP verification for WhatsApp linkage)
+» FR2: View list of doctors with specialty, photo, available days
+« FR3: View real-time available hourly booking blocks for a chosen doctor/date (not
+exclusive single-patient slots)
+« FR4:Book into an hourly block and receive a token number with an estimated
+consultation time, then pay online
+« FRS5: Receive booking confirmation with token number and estimated time (in-app +
+WhatsApp)
+« FR6:Reschedule or cancel an upcoming appointment (within policy window)
+« FR7:View appointment history and past prescriptions/notes (optional v2)
+« FR8: Receive automated reminders (24h and 1h before estimated time)
+
+
+===== page-02.png =====
+
+« FR8a: Receive alive ETA update (in-app + WhatsApp) if the doctor runs early/late or
+the queue shifts due to cancellations/no-shows
+
+» FR25: Join a waitlist for a fully-booked hour block; get automatically notified with a
+time-limited claim window if a token frees up
+
+« FR26: Add and manage dependent profiles (parent, spouse, child) under one account
+and book appointments on their behalf
+
+« FR27: Use a guided symptom checker (symptom tags or free text) to get a suggested
+specialty/doctor when unsure which doctor to book — presented explicitly as
+guidance, not a medical diagnosis
+
+Doctor
+
+» FRO: Login to a personal dashboard
+
+« FRI10: Set/edit weekly working hours, breaks, leave days, and hourly patient capacity
+(default average consultation time, e.g., 5 min = 12/hour)
+
+« FRI11: View today's/week's appointment schedule as a token queue (not fixed slots)
+
+« FR12: Mark an appointment as Completed / No-show / In-progress, which records
+actual consultation duration
+
+« FR13: View patient basic details for context before consultation
+
+« FR13a: Apply a one-tap "running late" delay offset (e.g., +15 min) that shifts all
+remaining queued patients' ETAs at once
+
+Admin
+
+« FR14: Add/edit/deactivate doctor profiles (fixed roster of 5-6)
+
+« FR1S: View a combined schedule across all doctors (grid view)
+
+« FR16: Manually create/cancel/reschedule bookings (walk-ins, phone calls)
+
+« FR17: View payment/transaction history
+
+« FR18: View basic analytics (bookings this week, cancellations, no-show rate, revenue,
+average consultation time per doctor)
+
+« FR19: Trigger manual notifications if needed (e.g., "Doctor unavailable today")
+
+« FR20: Override/adjust a doctor's hourly capacity or insert a walk-in into an existing
+queue without disturbing other patients' order
+
+« FR28: View doctor performance analytics — punctuality (estimated vs. actual
+consultation times), busiest-hour heatmap, no-show trend per doctor, waitlist
+conversion rate
+
+
+===== page-03.png =====
+
+1.4 Non-Functional Requirements
+Category Requirement
+Performance Handle 100+ bookings/week comfortably; slot queries return in <500ms
+Reliability No double-booking under concurrent requests (transactional integrity)
+Usability Mobile-responsive; booking flow completable in under 3 minutes
+Security Passwords hashed (berypt); JWT-based auth; role-based access control (RBAC);
+rate limiting + CAPTCHA on public booking/registration endpoints to prevent
+bot/fake token abuse
+Availability System usable during clinic hours without manual intervention
+Data Privacy Patient medical/contact data access restricted by role
+Maintainability Modular codebase (routes/controllers/services separated) for future feature
+additions
+Transparency ~~ ETAs are always communicated as estimates/windows, never guarantees, to
+manage patient expectations
+1.5 Out of Scope (v1)
+« Multi-clinic/multi-branch support
+« Doctor self-signup (Admin creates doctor accounts)
+» Video consultations
+« Insurance/claims processing
+SDLC PHASE 2: SYSTEM DESIGN
+2.1 High-Level Architecture
+React (Vite) SPA <—HTTPS/WebSocket—> Node.js/Express API <—>
+PostgreSQL
+|
+|—> Razorpay (payment +
+webhook)
+—> Twilio WhatsApp API
+(notifications)
+—> node-cron (reminder
+scheduler)
+
+
+===== page-04.png =====
+
+2.2 Core Database Entities (Conceptual)
+
+« users (id, name, email, phone, password_hash, role[patient/doctor/admin])
+
+« doctors (id, user_id FK, specialty, bio, photo_url, consultation_fee,
+avg_consultation_minutes — rolling average, updated after each completed
+appointment)
+
+« doctor_availability (id, doctor_id FK, day_of_week, start_time, end_time,
+hourly_capacity — replaces fixed slot_duration_minutes; capacity derived from
+avg_consultation_minutes but doctor-overridable)
+
++ doctor_leaves (id, doctor_id FK, date, reason)
+
+« appointments (id, patient_id FK, doctor_id FK, booked_for_dependent_id — nullable
+FK to dependents, hour_block_start, queue_position — token number within the
+hour block, estimated_time — recalculated dynamically, actual_start_time,
+actual_end_time, status[held/booked/in_progress/completed/cancelled/no_show],
+payment_id FK, created_by_admin flag)
+
+« payments (id, appointment _id FK, razorpay_order_id, razorpay_payment_id, amount,
+status)
+
+« notifications (id, user_id FK, type[in_app/whatsapp], message, status, sent_at)
+
+« queue_delay_offsets (id, doctor_id FK, date, offset_minutes, reason) — tracks manual
+"running late" adjustments applied to a day's queue
+
+« waitlist (id, patient_id FK, doctor_id FK, date, hour_block_start, position,
+status[waiting/notified/claimed/expired], created_at)
+
+« dependents (id, patient_user_id FK, name, relation, date_of_birth, gender)
+
+« symptom _specialty_map (id, symptom_keyword, specialty) — small curated lookup
+table; no ML needed given a fixed roster of 5-6 doctors
+
+(Full schema with constraints/indexes to be detailed in a dedicated schema doc — happy to
+build that next.)
+
+
+===== page-05.png =====
+
+2.3 API Structure (REST, high-level)
+/api/auth/* > register, login, OTP verify
+/api/doctors/* > list, detail, availability (CRUD by admin)
+/api/slots/:doctorld > GET available hourly blocks + remaining capacity
+for a date
+/api/appointments/* > create (hold+pay > token+ETA), reschedule, cancel,
+list
+/api/appointments/:id/status > doctor marks in_progress/completed/no_show
+(records actual duration)
+/api/queue/:doctorId/:date > GET live queue state (token positions, current
+ETAs)
+/api/queuve/:doctorId/delay > POST a "running late" offset, shifts remaining
+ETAs
+/api/payments/webhook > Razorpay payment confirmation
+/api/admin/* > dashboard stats, manual booking management, walk-
+in insertion
+/api/admin/analytics/doctor-performance > GET punctuality, heatmap, no-show,
+waitlist conversion data
+/api/waitlist/* > join waitlist, list, internal auto-notify trigger
+on cancellation
+/api/dependents/* > CRUD for a patient's linked family/dependent
+profiles
+/api/symptom-check > POST symptom tags/text > GET suggested specialty +
+matching doctors
+/api/notifications/* > internal trigger endpoints (not public-facing)
+SDLC PHASE 3: FEATURE-BY-FEATURE BREAKDOWN
+Each feature below includes: what it does, why it matters, and the key implementation logic
+— the level of detail a senior dev would document before coding.
+Feature 1: Hourly Capacity Blocks & Token Queue Generation
+What: Instead of one exclusive slot per hour, each doctor's hour block (e.g., 10-11 AM) holds
+multiple patients based on capacity — derived from an average consultation time (e.g., 5
+min - 12 patients/hour). Each booking gets a token number and an initial estimated time =
+block start + (token position — 1) x average duration. Why it matters: A real doctor sees far
+more patients per hour than a 1-slot-per-hour model allows. Without this, the system either
+wastes 90% of actual capacity or forces patients into a misleading shared "10-11" window.
+This is the foundation the rest of the booking system builds on. Implementation logic:
+« Store availability + capacity as rules (recurring pattern + hourly capacity), not pre-
+generated rows for infinite dates
+
+
+===== page-06.png =====
+
+« Generate actual hour-block instances on-demand for a requested date range, showing
+"X of 12 spots remaining" rather than a single available/unavailable state
+
+«+ Cross-check against and existing in that block before
+allowing a new token to be issued
+
++ New token's =block_start + (current queue length) x doctor's
+
+Feature 2: Real-Time Token Booking (No Double-Booking, No Overbooking)
+
+‘What: When a patient books into an hour block, a token is temporarily "held" during
+payment; on success it becomes a permanent, sequentially-numbered queue entry; on
+failure/timeout it releases and the position becomes available again. Why it matters: This is
+the trickiest concurrency problem in the app — multiple patients could request the last
+token in a block within milliseconds, and token numbers must stay gap-free and sequential
+for the ETA math to hold. Implementation logic:
+
+« UseaDB transaction with on the hour block when assigning
+the next so two concurrent bookings can never receive the same
+token
+
+« Setashort expiry (e.g., 5 minutes) on held tokens; a background job releases expired
+holds and closes the gap in queue positions
+
++ Emita Socket.io event (queue: updated) so other patients viewing that doctor's block
+see remaining capacity and their potential position update live
+
+Feature 2a: Dynamic ETA Recalculation Engine
+
+What: After each consultation is marked complete, the system compares actual duration to
+the assumed average and recalculates estimated times for every patient still waiting in the
+queue — for that doctor, that day. Why it matters: This is what makes the token system
+trustworthy rather than just a nicer-looking version of the same over-promising problem.
+Consultations naturally run long or short, and patients need estimates that reflect reality,
+not a static assumption made at booking time. Implementation logic:
+
+« Update arolling average (e.g., weighted average of last N consultations that day) into
+for that doctor/day
+
+« Recompute for all remaining (booked)/(held) appointments in that
+day's queue using the new average and current position
+
+«On cancellation or no-show, shift all subsequent queue positions up by one and
+recompute their ETAs
+
+« Onamanual "delay offset" from the doctor (e.g., "+15 min, emergency"), apply a flat
+offset to all remaining ETAs in one operation via
+
+
+===== page-07.png =====
+
+« Push updated ETAs via Socket.io (in-app) and a WhatsApp template message to
+
+affected patients — always phrased as an estimate/window, never a guarantee
+Feature 3: Booking Flow & Payment Integration
+‘What: Patient picks doctor - date - hour block -> confirms -> pays via Razorpay - gets a
+token number and estimated time. Why it matters: Payment failure/edge cases (user closes
+tab mid-payment, payment succeeds but webhook is delayed) must not corrupt
+appointment state. Implementation logic:
+
+« Create Razorpay order server-side first, then open checkout client-side (never trust
+client-only payment confirmation)
+
+« Confirm booking only after Razorpay webhook verifies payment signature server-
+side — not just the client-side success callback
+
+« Handle webhook idempotency (Razorpay may retry webhooks) using the payment ID
+as a unique constraint
+
+Feature 4: Notifications (In-App + WhatsApp)
+
+What: Booking confirmations, reminders (24h/1h before estimated time), cancellations,
+reschedules, and live ETA-shift updates (queue moved up/delayed) all trigger both an in-
+app notification and a WhatsApp message. Why it matters: This directly delivers the "60%
+reduction in manual scheduling effort" value proposition — it's the automation payoff.
+Implementation logic:
+
++ In-app:insertarow into (notifications)table; frontend polls or listens via Socket.io for
+new ones
+
++ WhatsApp: use Twilio's WhatsApp Business API with pre-approved message
+templates (required for anything outside a 24h user-initiated session window)
+
++ Reminder scheduling: a job runs every 15 minutes, queries appointments
+starting in ~24h or ~1h windows that haven't been reminded yet, and fires
+notifications
+
+Feature 5: Patient Dashboard
+What: Upcoming appointments, past history, reschedule/cancel actions, notification center.
+Implementation logic:
+
+« Reschedule = cancel old token (release it, shift queue behind it) + create new held
+token in a different block, in one transaction
+
+« Cancellation policy enforcement (e.g., no cancellation within 2 hours of appointment)
+handled server-side, not just Ul-disabled buttons
+
+» Patient view shows both the estimated time and a live "currently serving token #N"
+indicator so a shifting ETA reads as normal system behavior, not an error
+
+
+===== page-08.png =====
+
+Feature 6: Doctor Dashboard
+What: Today/week schedule view as a token queue (not fixed slots), availability + capacity
+editor, mark appointment status, apply delay offsets. Implementation logic:
+
+« Status transitions restricted server-side (e.g., can't mark "Completed" before "In-
+progress" has been set)
+
++ Marking "Completed" captures which feeds directly into the ETA
+recalculation engine (Feature 2a)
+
+« Availability/capacity edits shouldn't retroactively break already-booked tokens —
+validate against existing bookings before allowing a change
+
+» One-tap "running late" control applies a flat offset to the day's remaining queue
+instead of requiring per-patient edits
+
+Feature 7: Admin Dashboard
+What: Cross-doctor schedule grid, manual booking tools, payment records, analytics.
+Implementation logic:
+
+» Combined schedule: one query joining all doctors' appointments for a date range,
+rendered as a grid (doctor rows x time columns)
+
+« Manual booking bypasses payment (marked "pay at clinic" or admin-comped) —
+needs a separate appointment creation path with an audit flag ((created_by_admin:
+true )
+
+» Walk-ins inserted by Admin are appended to the end of the current day's queue by
+default, so existing patients’ token order and ETAs are never disturbed
+
+« Analytics: aggregate queries (COUNT/GROUP BY on appointments by status/week),
+plus average consultation time per doctor to sanity-check capacity settings — no need
+for a separate analytics service at this scale
+
+Feature 8: Authentication & Role-Based Access
+What: Single login system, role-based route protection. Implementation logic:
+
+« JWT with role embedded in payload; middleware checks role before allowing access
+to (/api/admin/*), /api/doctors/:id/availability) (edit), etc.
+
+«Doctor accounts created by Admin only (no public doctor signup)
+
+Feature 9: Cancellation Waitlist Auto-Fill
+
+‘What: When an hour block is full, a patient can join a waitlist instead of giving up. If any
+token in that block is later cancelled or expires unclaimed, the system automatically offers
+it to the next waitlisted patient. Why it matters: Without this, every cancellation is simply
+lost capacity — the doctor sees one fewer patient than they could have, and a waiting
+patient never finds out a spot opened up. Implementation logic:
+
+
+===== page-09.png =====
+
+. entries are ordered FIFO per doctor/date/hour_block
+
+« On token cancellation/expiry, a background job (or the same transaction that releases
+the token) checks for the earliest waitlist entry and moves it to (notified),
+sending an in-app + WhatsApp message with a short claim window (e.g., 10 minutes)
+
+« Ifunclaimed within the window, status becomes and the system offers it to
+the next person in line
+
+« If claimed, a normal token booking is created and payment is collected as usual
+
+Feature 10: Family/Dependent Profiles
+
+What: A patient account can add linked dependents (spouse, child, parent) and book
+appointments on their behalf, without each dependent needing a separate login. Why it
+matters: Very common real-world usage pattern for a family clinic — one person in the
+household typically manages bookings for everyone. Implementation logic:
+
+. table linked to the primary account holder ((patient_user_id))
+
+. is nullable — null means the account holder
+themself is the patient, otherwise it references the dependent
+
+« Allnotifications (WhatsApp, in-app) go to the primary account holder's phone/login
+regardless of which dependent the appointment is for
+
+« Doctor/Admin views show the dependent's name and relation clearly, so it's obvious
+who is actually being seen
+
+Feature 11: Symptom-to-Specialty Helper
+
+What: A simple guided flow — patient selects or types symptoms (e.g., "toothache," "skin
+rash," "back pain") — that suggests a specialty and matching doctor(s), for patients unsure
+which doctor to book. Why it matters: Reduces booking abandonment for patients who
+don't know clinic-specific specialty terms; mirrors a pattern proven at scale by platforms
+like Practo. Implementation logic:
+
+» Given a fixed roster of 5-6 doctors, this does not need machine learning — a small
+curated lookup table (symptom keyword -> specialty) is
+sufficient and far easier to maintain/audit
+
+« Patient input matched against keyword tags (chip-style multi-select is more reliable
+than free text for a small clinic; free text can be layered on top with simple keyword
+matching later)
+
+« Result shows suggested specialty + doctors in that specialty with current availability
+— patient still makes the final choice
+
+« Important safeguard: always display this as general guidance ("Based on what you've
+described, you may want to see...") with a visible disclaimer that it is not a medical
+diagnosis and urgent symptoms should be treated as such (e.g., a note to call the clinic
+directly or seek emergency care for severe symptoms)
+
+
+===== page-10.png =====
+
+Feature 12: Doctor Performance & Queue Analytics
+What: An analytics view for Admin (and optionally each doctor, for their own data)
+showing punctuality (estimated vs. actual consultation times), a busiest-hours heatmap,
+no-show trends, and waitlist conversion rate. Why it matters: The queue/ETA system
+generates a lot of useful operational data — this feature is what turns that data into
+decisions (e.g., "Dr. X's capacity setting of 12/hour is unrealistic; actual average is 8 minutes,
+not 5"). Implementation logic:
++ Punctuality: aggregate vs. the
+assumed at booking time, per doctor per day/week
+« Heatmap: COUNT of appointments grouped by hour-of-day and day-of-week
+« No-show trend: rate of| status over time, filterable by doctor
+» Waitlist conversion: percentage of waitlist offers that were claimed vs. expired
+« All of this is achievable with standard SQL aggregate queries on the existing
+and tables — no separate analytics service needed at this
+scale
+Feature 13: Rate Limiting & Bot Protection
+What: Protects public-facing endpoints (registration, booking, symptom checker) from
+automated abuse — fake token spam, scripted registration floods, or scraping. Why it
+matters: A booking system with real payment and limited daily capacity is a natural target
+for abuse (e.g., a script grabbing every token in a popular doctor's queue). This needs to be
+designed in from the start, not bolted on after an incident. Implementation logic:
++ API-level rate limiting middleware (e.g.,(express-rate-1init)) on (/api/auth/*),
+(create), and (7api/symptom-check), keyed by IP and/or account
+« CAPTCHA (e.g., Google reCAPTCHA v3, invisible/low-friction) on registration and
+the booking confirmation step
+« Phone OTP verification (already required for WhatsApp linkage) doubles as a natural
+bot deterrent, since it requires a real, reachable phone number
+« Logand alert on unusual patterns (e.g., many bookings from one IP in a short window)
+for Admin visibility
+SDLC PHASE 4: IMPLEMENTATION PLAN (Build Order)
+1. Setup — repo structure, DB connection, environment config, base auth
+(register/login JWT)
+2. Doctor & Availability Module — CRUD for doctors (admin), availability rules, hourly
+capacity, hour-block generation logic
+3. Booking Engine — token holding/assignment, ETA calculation,
+cancellation/reschedule, concurrency handling 3a. Dynamic ETA Engine — rolling
+
+
+===== page-11.png =====
+
+average tracking, queue recalculation on completion/cancellation/no-show, delay
+offset handling 3b. Waitlist Engine — join waitlist, auto-notify on cancellation, claim
+window handling
+4. Payments — Razorpay order creation, checkout integration, webhook handling
+5. Notifications — in-app notification system, Twilio WhatsApp integration, cron
+reminder job
+6. Patient UI — doctor listing, symptom-to-specialty helper, slot picker, booking flow,
+family/dependent management, dashboard
+7. Doctor UI — schedule view, availability editor
+8. Admin UI — combined schedule grid, manual booking, performance analytics
+dashboard
+9. Security Hardening — rate limiting, CAPTCHA on public endpoints
+10. UI Polish — warm/friendly theme, responsive pass, micro-interactions
+11. Testing pass — see Phase 5
+12. Deployment — deferred, revisit later
+SDLC PHASE 5: TESTING STRATEGY
+Test Type Focus
+Unit tests Slot generation logic, availability rule parsing, date/time edge cases
+Integration tests Booking flow end-to-end (hold = pay - confirm), webhook handling
+Concurrency tests Simulate two simultaneous booking requests for the last token in a block
+ETA recalculation Verify ETAs update correctly after completion, cancellation, no-show, and
+tests delay offset scenarios
+Manual QA Full role-based walkthroughs (Patient, Doctor, Admin) on mobile +
+desktop
+Payment sandbox Razorpay test mode — success, failure, and delayed webhook scenarios
+testing
+SDLC PHASE 6: DEPLOYMENT (Deferred)
+Noted as a future phase per current decision — will revisit domain/hosting/SSL setup once
+the application is functionally complete and tested locally.
+SDLC PHASE 7: MAINTENANCE (Post-Launch Considerations)
+» Monitor no-show rates and WhatsApp delivery failures
+
+
+===== page-12.png =====
+
+« Periodic doctor availability updates (holidays, schedule changes)
+
+» Backup strategy for PostgreSQL data
+
+« Handle Twilio/Razorpay API version changes over time
+
+SDLC PHASE 1a: COMPETITIVE ANALYSIS & FEATURE ENHANCEMENT
+ROADMAP
+
+(Added after reviewing existing market players — Practo, WaitWell, SimplePractice,
+NexHealth, and similar clinic scheduling platforms — to sharpen scope beyond the initial
+baseline.)
+
+Confirmed for v1 Build (client-approved, detailed in Phase 3 as Features 9-13)
+
+1. Cancellation waitlist auto-fill — recovers lost capacity from cancellations (FR22,
+Feature 9)
+
+2. Family/dependent profiles — book for parent/spouse/child under one account (FR26,
+Feature 10)
+
+3. Symptom-to-specialty helper — guided symptom-based doctor recommendation,
+not a diagnosis (FR27, Feature 11)
+
+4. Doctor performance & queue analytics — punctuality, heatmap, no-show, waitlist
+conversion (FR28, Feature 12)
+
+5. Rate limiting / bot protection — on all public-facing booking/registration endpoints
+(Feature 13)
+
+Market Observations
+
+« Practo treats booking as one entry point into a broader ecosystem (diagnostics,
+prescriptions, pharmacy) and uses symptom-based doctor discovery rather than
+name-only search.
+
+«  WaitWell validates our token/queue direction — it's built specifically because most
+scheduling software ignores what happens after a patient arrives, and unifies booked
+appointments with walk-in queuing in one dashboard.
+
+« SimplePractice / NexHealth / OmniMD-tier tools converge on digital intake forms
+(replacing paper forms in the waiting room) and multi-channel reminders (text +
+email + voice, not just one channel).
+
+» BestDoc-tier tools highlight waitlist management to auto-fill cancellations — a gap in
+our current design, since a cancelled token currently just becomes unused capacity.
+
+Must-Have Additions (Functional)
+
+« FR21: Digital pre-visit intake form (symptoms, brief history) captured at booking,
+visible to doctor before consultation
+
+» FR22: [7] Cancellation waitlist — confirmed, see above
+
+
+===== page-13.png =====
+
+« FR23: Patient "check-in" action (self via app, or admin-assisted) that marks arrival and
+starts the queue clock — distinct from "booked"
+
+« FR24: [4 Family/dependent profiles — confirmed, see above
+
+Must-Have Additions (Non-Functional)
+
+» NFR: Compliance framework aligned to India's Digital Personal Data Protection
+(DPDP) Act, 2023 — explicit consent capture at registration, data minimization,
+documented retention policy (not HIPAA, which is US-specific)
+
+Recommended Additions (Should-Have)
+
+«Multi-channel reminder fallback — auto-fallback to SMS if WhatsApp delivery fails
+
+« E-prescription / visit summary — doctor adds brief notes on completion, patient
+downloads as PDF
+
+» Admin audit log — every manual override (walk-in insertion, delay offset, manual
+cancellation) timestamped with the acting admin
+
+« Embeddable Google/website booking widget — a shareable booking link for the
+clinic's Google Business profile and site
+
+Optional / Nice-to-Have (Explicitly deferred to v2+ unless client requests)
+
+« Video/teleconsultation module (high build cost — WebRTC, bandwidth; confirm
+client need first)
+
+« Insurance verification workflow (low relevance for cash-pay Indian clinic context)
+
+« Public doctor/clinic reviews (moderation overhead, low value for an already-
+established single clinic)
+
+«Voice call reminders (needs a telephony vendor — add only if WhatsApp/SMS
+delivery proves insufficient)
+
+« Kiosk self check-in hardware (elegant, but a physical-hardware v2 upgrade, nota vl
+build item)
+
+« Loyalty/referral system (low urgency — single dedicated clinic, not a patient-
+acquisition marketplace)
+
+Other Non-Functional Hardening Worth Locking In Early
+
+. Rate limiting / bot protection — confirmed, see above (Feature 13)
+
+«Graceful WhatsApp API degradation — silent fallback to in-app + SMS if the provider
+APIisdown
+
+« Basicaccessibility (contrast, font size, tap target size)
+
+« Hindi/English bilingual UI toggle — cheap if planned from the start using a React i18n
+library, expensive to retrofit later
+
+This document is meant to evolve — recommended next artifacts:
+
+
+===== page-14.png =====
+
+1. Detailed database schema (tables, columns, constraints, indexes, ER diagram)
+2. Page-by-page wireframe/screen list (what exists in each role's UI)
+3. API contract document (request/response shapes per endpoint)

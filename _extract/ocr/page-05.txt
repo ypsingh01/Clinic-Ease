@@ -1,0 +1,38 @@
+2.3 API Structure (REST, high-level)
+/api/auth/* > register, login, OTP verify
+/api/doctors/* > list, detail, availability (CRUD by admin)
+/api/slots/:doctorld > GET available hourly blocks + remaining capacity
+for a date
+/api/appointments/* > create (hold+pay > token+ETA), reschedule, cancel,
+list
+/api/appointments/:id/status > doctor marks in_progress/completed/no_show
+(records actual duration)
+/api/queue/:doctorId/:date > GET live queue state (token positions, current
+ETAs)
+/api/queuve/:doctorId/delay > POST a "running late" offset, shifts remaining
+ETAs
+/api/payments/webhook > Razorpay payment confirmation
+/api/admin/* > dashboard stats, manual booking management, walk-
+in insertion
+/api/admin/analytics/doctor-performance > GET punctuality, heatmap, no-show,
+waitlist conversion data
+/api/waitlist/* > join waitlist, list, internal auto-notify trigger
+on cancellation
+/api/dependents/* > CRUD for a patient's linked family/dependent
+profiles
+/api/symptom-check > POST symptom tags/text > GET suggested specialty +
+matching doctors
+/api/notifications/* > internal trigger endpoints (not public-facing)
+SDLC PHASE 3: FEATURE-BY-FEATURE BREAKDOWN
+Each feature below includes: what it does, why it matters, and the key implementation logic
+— the level of detail a senior dev would document before coding.
+Feature 1: Hourly Capacity Blocks & Token Queue Generation
+What: Instead of one exclusive slot per hour, each doctor's hour block (e.g., 10-11 AM) holds
+multiple patients based on capacity — derived from an average consultation time (e.g., 5
+min - 12 patients/hour). Each booking gets a token number and an initial estimated time =
+block start + (token position — 1) x average duration. Why it matters: A real doctor sees far
+more patients per hour than a 1-slot-per-hour model allows. Without this, the system either
+wastes 90% of actual capacity or forces patients into a misleading shared "10-11" window.
+This is the foundation the rest of the booking system builds on. Implementation logic:
+« Store availability + capacity as rules (recurring pattern + hourly capacity), not pre-
+generated rows for infinite dates

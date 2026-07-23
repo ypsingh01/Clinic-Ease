@@ -1,0 +1,52 @@
+. entries are ordered FIFO per doctor/date/hour_block
+
+« On token cancellation/expiry, a background job (or the same transaction that releases
+the token) checks for the earliest waitlist entry and moves it to (notified),
+sending an in-app + WhatsApp message with a short claim window (e.g., 10 minutes)
+
+« Ifunclaimed within the window, status becomes and the system offers it to
+the next person in line
+
+« If claimed, a normal token booking is created and payment is collected as usual
+
+Feature 10: Family/Dependent Profiles
+
+What: A patient account can add linked dependents (spouse, child, parent) and book
+appointments on their behalf, without each dependent needing a separate login. Why it
+matters: Very common real-world usage pattern for a family clinic — one person in the
+household typically manages bookings for everyone. Implementation logic:
+
+. table linked to the primary account holder ((patient_user_id))
+
+. is nullable — null means the account holder
+themself is the patient, otherwise it references the dependent
+
+« Allnotifications (WhatsApp, in-app) go to the primary account holder's phone/login
+regardless of which dependent the appointment is for
+
+« Doctor/Admin views show the dependent's name and relation clearly, so it's obvious
+who is actually being seen
+
+Feature 11: Symptom-to-Specialty Helper
+
+What: A simple guided flow — patient selects or types symptoms (e.g., "toothache," "skin
+rash," "back pain") — that suggests a specialty and matching doctor(s), for patients unsure
+which doctor to book. Why it matters: Reduces booking abandonment for patients who
+don't know clinic-specific specialty terms; mirrors a pattern proven at scale by platforms
+like Practo. Implementation logic:
+
+» Given a fixed roster of 5-6 doctors, this does not need machine learning — a small
+curated lookup table (symptom keyword -> specialty) is
+sufficient and far easier to maintain/audit
+
+« Patient input matched against keyword tags (chip-style multi-select is more reliable
+than free text for a small clinic; free text can be layered on top with simple keyword
+matching later)
+
+« Result shows suggested specialty + doctors in that specialty with current availability
+— patient still makes the final choice
+
+« Important safeguard: always display this as general guidance ("Based on what you've
+described, you may want to see...") with a visible disclaimer that it is not a medical
+diagnosis and urgent symptoms should be treated as such (e.g., a note to call the clinic
+directly or seek emergency care for severe symptoms)

@@ -1,0 +1,53 @@
+« Periodic doctor availability updates (holidays, schedule changes)
+
+» Backup strategy for PostgreSQL data
+
+« Handle Twilio/Razorpay API version changes over time
+
+SDLC PHASE 1a: COMPETITIVE ANALYSIS & FEATURE ENHANCEMENT
+ROADMAP
+
+(Added after reviewing existing market players — Practo, WaitWell, SimplePractice,
+NexHealth, and similar clinic scheduling platforms — to sharpen scope beyond the initial
+baseline.)
+
+Confirmed for v1 Build (client-approved, detailed in Phase 3 as Features 9-13)
+
+1. Cancellation waitlist auto-fill — recovers lost capacity from cancellations (FR22,
+Feature 9)
+
+2. Family/dependent profiles — book for parent/spouse/child under one account (FR26,
+Feature 10)
+
+3. Symptom-to-specialty helper — guided symptom-based doctor recommendation,
+not a diagnosis (FR27, Feature 11)
+
+4. Doctor performance & queue analytics — punctuality, heatmap, no-show, waitlist
+conversion (FR28, Feature 12)
+
+5. Rate limiting / bot protection — on all public-facing booking/registration endpoints
+(Feature 13)
+
+Market Observations
+
+« Practo treats booking as one entry point into a broader ecosystem (diagnostics,
+prescriptions, pharmacy) and uses symptom-based doctor discovery rather than
+name-only search.
+
+«  WaitWell validates our token/queue direction — it's built specifically because most
+scheduling software ignores what happens after a patient arrives, and unifies booked
+appointments with walk-in queuing in one dashboard.
+
+« SimplePractice / NexHealth / OmniMD-tier tools converge on digital intake forms
+(replacing paper forms in the waiting room) and multi-channel reminders (text +
+email + voice, not just one channel).
+
+» BestDoc-tier tools highlight waitlist management to auto-fill cancellations — a gap in
+our current design, since a cancelled token currently just becomes unused capacity.
+
+Must-Have Additions (Functional)
+
+« FR21: Digital pre-visit intake form (symptoms, brief history) captured at booking,
+visible to doctor before consultation
+
+» FR22: [7] Cancellation waitlist — confirmed, see above

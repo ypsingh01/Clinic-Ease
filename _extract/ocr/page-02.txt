@@ -1,0 +1,51 @@
+« FR8a: Receive alive ETA update (in-app + WhatsApp) if the doctor runs early/late or
+the queue shifts due to cancellations/no-shows
+
+» FR25: Join a waitlist for a fully-booked hour block; get automatically notified with a
+time-limited claim window if a token frees up
+
+« FR26: Add and manage dependent profiles (parent, spouse, child) under one account
+and book appointments on their behalf
+
+« FR27: Use a guided symptom checker (symptom tags or free text) to get a suggested
+specialty/doctor when unsure which doctor to book — presented explicitly as
+guidance, not a medical diagnosis
+
+Doctor
+
+» FRO: Login to a personal dashboard
+
+« FRI10: Set/edit weekly working hours, breaks, leave days, and hourly patient capacity
+(default average consultation time, e.g., 5 min = 12/hour)
+
+« FRI11: View today's/week's appointment schedule as a token queue (not fixed slots)
+
+« FR12: Mark an appointment as Completed / No-show / In-progress, which records
+actual consultation duration
+
+« FR13: View patient basic details for context before consultation
+
+« FR13a: Apply a one-tap "running late" delay offset (e.g., +15 min) that shifts all
+remaining queued patients' ETAs at once
+
+Admin
+
+« FR14: Add/edit/deactivate doctor profiles (fixed roster of 5-6)
+
+« FR1S: View a combined schedule across all doctors (grid view)
+
+« FR16: Manually create/cancel/reschedule bookings (walk-ins, phone calls)
+
+« FR17: View payment/transaction history
+
+« FR18: View basic analytics (bookings this week, cancellations, no-show rate, revenue,
+average consultation time per doctor)
+
+« FR19: Trigger manual notifications if needed (e.g., "Doctor unavailable today")
+
+« FR20: Override/adjust a doctor's hourly capacity or insert a walk-in into an existing
+queue without disturbing other patients' order
+
+« FR28: View doctor performance analytics — punctuality (estimated vs. actual
+consultation times), busiest-hour heatmap, no-show trend per doctor, waitlist
+conversion rate

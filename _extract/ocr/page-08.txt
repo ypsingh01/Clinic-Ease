@@ -1,0 +1,49 @@
+Feature 6: Doctor Dashboard
+What: Today/week schedule view as a token queue (not fixed slots), availability + capacity
+editor, mark appointment status, apply delay offsets. Implementation logic:
+
+« Status transitions restricted server-side (e.g., can't mark "Completed" before "In-
+progress" has been set)
+
++ Marking "Completed" captures which feeds directly into the ETA
+recalculation engine (Feature 2a)
+
+« Availability/capacity edits shouldn't retroactively break already-booked tokens —
+validate against existing bookings before allowing a change
+
+» One-tap "running late" control applies a flat offset to the day's remaining queue
+instead of requiring per-patient edits
+
+Feature 7: Admin Dashboard
+What: Cross-doctor schedule grid, manual booking tools, payment records, analytics.
+Implementation logic:
+
+» Combined schedule: one query joining all doctors' appointments for a date range,
+rendered as a grid (doctor rows x time columns)
+
+« Manual booking bypasses payment (marked "pay at clinic" or admin-comped) —
+needs a separate appointment creation path with an audit flag ((created_by_admin:
+true )
+
+» Walk-ins inserted by Admin are appended to the end of the current day's queue by
+default, so existing patients’ token order and ETAs are never disturbed
+
+« Analytics: aggregate queries (COUNT/GROUP BY on appointments by status/week),
+plus average consultation time per doctor to sanity-check capacity settings — no need
+for a separate analytics service at this scale
+
+Feature 8: Authentication & Role-Based Access
+What: Single login system, role-based route protection. Implementation logic:
+
+« JWT with role embedded in payload; middleware checks role before allowing access
+to (/api/admin/*), /api/doctors/:id/availability) (edit), etc.
+
+«Doctor accounts created by Admin only (no public doctor signup)
+
+Feature 9: Cancellation Waitlist Auto-Fill
+
+‘What: When an hour block is full, a patient can join a waitlist instead of giving up. If any
+token in that block is later cancelled or expires unclaimed, the system automatically offers
+it to the next waitlisted patient. Why it matters: Without this, every cancellation is simply
+lost capacity — the doctor sees one fewer patient than they could have, and a waiting
+patient never finds out a spot opened up. Implementation logic:

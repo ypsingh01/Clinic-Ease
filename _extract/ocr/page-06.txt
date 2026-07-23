@@ -1,0 +1,47 @@
+« Generate actual hour-block instances on-demand for a requested date range, showing
+"X of 12 spots remaining" rather than a single available/unavailable state
+
+«+ Cross-check against and existing in that block before
+allowing a new token to be issued
+
++ New token's =block_start + (current queue length) x doctor's
+
+Feature 2: Real-Time Token Booking (No Double-Booking, No Overbooking)
+
+‘What: When a patient books into an hour block, a token is temporarily "held" during
+payment; on success it becomes a permanent, sequentially-numbered queue entry; on
+failure/timeout it releases and the position becomes available again. Why it matters: This is
+the trickiest concurrency problem in the app — multiple patients could request the last
+token in a block within milliseconds, and token numbers must stay gap-free and sequential
+for the ETA math to hold. Implementation logic:
+
+« UseaDB transaction with on the hour block when assigning
+the next so two concurrent bookings can never receive the same
+token
+
+« Setashort expiry (e.g., 5 minutes) on held tokens; a background job releases expired
+holds and closes the gap in queue positions
+
++ Emita Socket.io event (queue: updated) so other patients viewing that doctor's block
+see remaining capacity and their potential position update live
+
+Feature 2a: Dynamic ETA Recalculation Engine
+
+What: After each consultation is marked complete, the system compares actual duration to
+the assumed average and recalculates estimated times for every patient still waiting in the
+queue — for that doctor, that day. Why it matters: This is what makes the token system
+trustworthy rather than just a nicer-looking version of the same over-promising problem.
+Consultations naturally run long or short, and patients need estimates that reflect reality,
+not a static assumption made at booking time. Implementation logic:
+
+« Update arolling average (e.g., weighted average of last N consultations that day) into
+for that doctor/day
+
+« Recompute for all remaining (booked)/(held) appointments in that
+day's queue using the new average and current position
+
+«On cancellation or no-show, shift all subsequent queue positions up by one and
+recompute their ETAs
+
+« Onamanual "delay offset" from the doctor (e.g., "+15 min, emergency"), apply a flat
+offset to all remaining ETAs in one operation via

@@ -1,0 +1,41 @@
+# Free-tier Blueprint — Neon Postgres + Render Web Service
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Connect this repo in Render Dashboard → New → Blueprint
+# (or create a Web Service manually with rootDir=backend, Dockerfile).
+
+services:
+  - type: web
+    name: clinicease-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FREE_TIER
+        value: "true"
+      - key: PORT
+        value: "4000"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 12h
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: WHATSAPP_MODE
+        value: mock
+      - key: ALLOW_MOCK_PAY
+        value: "true"
+      - key: OTP_DEV_CODE
+        value: "123456"
+      - key: RECAPTCHA_MODE
+        value: stub
+      - key: LOG_LEVEL
+        value: info
+      - key: SEED_DEMO_USERS
+        value: "true"

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /dev/
+Disallow: /patient/
+Disallow: /doctor/
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /otp
+
+Sitemap: https://your-domain.com/sitemap.xml

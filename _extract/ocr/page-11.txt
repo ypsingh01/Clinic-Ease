@@ -1,0 +1,31 @@
+average tracking, queue recalculation on completion/cancellation/no-show, delay
+offset handling 3b. Waitlist Engine — join waitlist, auto-notify on cancellation, claim
+window handling
+4. Payments — Razorpay order creation, checkout integration, webhook handling
+5. Notifications — in-app notification system, Twilio WhatsApp integration, cron
+reminder job
+6. Patient UI — doctor listing, symptom-to-specialty helper, slot picker, booking flow,
+family/dependent management, dashboard
+7. Doctor UI — schedule view, availability editor
+8. Admin UI — combined schedule grid, manual booking, performance analytics
+dashboard
+9. Security Hardening — rate limiting, CAPTCHA on public endpoints
+10. UI Polish — warm/friendly theme, responsive pass, micro-interactions
+11. Testing pass — see Phase 5
+12. Deployment — deferred, revisit later
+SDLC PHASE 5: TESTING STRATEGY
+Test Type Focus
+Unit tests Slot generation logic, availability rule parsing, date/time edge cases
+Integration tests Booking flow end-to-end (hold = pay - confirm), webhook handling
+Concurrency tests Simulate two simultaneous booking requests for the last token in a block
+ETA recalculation Verify ETAs update correctly after completion, cancellation, no-show, and
+tests delay offset scenarios
+Manual QA Full role-based walkthroughs (Patient, Doctor, Admin) on mobile +
+desktop
+Payment sandbox Razorpay test mode — success, failure, and delayed webhook scenarios
+testing
+SDLC PHASE 6: DEPLOYMENT (Deferred)
+Noted as a future phase per current decision — will revisit domain/hosting/SSL setup once
+the application is functionally complete and tested locally.
+SDLC PHASE 7: MAINTENANCE (Post-Launch Considerations)
+» Monitor no-show rates and WhatsApp delivery failures

@@ -16,6 +16,7 @@ import {
   symptomRouter,
   waitlistRouter,
 } from './routes/misc.js'
+import { setupRouter } from './routes/setup.js'
 
 export type RequestWithRaw = Request & { rawBody?: string; requestId?: string }
 
@@ -99,6 +100,7 @@ export function createApp() {
   })
 
   app.use('/api/auth', authRouter)
+  app.use('/api/setup', setupRouter)
   app.use('/api/doctors', doctorsRouter)
   app.use('/api/slots', slotsRouter)
   app.use('/api/appointments', appointmentsRouter)

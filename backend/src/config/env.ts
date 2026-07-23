@@ -44,6 +44,7 @@ const envSchema = z
       .string()
       .default('false')
       .transform((v) => v === 'true'),
+    SEED_SECRET: z.string().optional().default(''),
     ADMIN_BOOTSTRAP_EMAIL: z.string().optional().default(''),
     ADMIN_BOOTSTRAP_PASSWORD: z.string().optional().default(''),
     ADMIN_BOOTSTRAP_NAME: z.string().optional().default('Clinic Admin'),

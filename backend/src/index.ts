@@ -1,10 +1,11 @@
 import http from 'node:http'
 import * as Sentry from '@sentry/node'
 import { createApp } from './app.js'
-import { env } from './config/env.js'
+import { env, isFreeTier } from './config/env.js'
 import { initSockets } from './sockets/io.js'
 import { startJobs } from './jobs/index.js'
 import { logger } from './lib/logger.js'
+import { seedIfEmpty } from './services/seedCatalog.js'
 
 if (env.SENTRY_DSN) {
   Sentry.init({
@@ -20,7 +21,12 @@ initSockets(server)
 startJobs()
 
 server.listen(env.PORT, () => {
-  logger.info({ port: env.PORT, env: env.NODE_ENV }, 'ClinicEase API listening')
+  logger.info({ port: env.PORT, env: env.NODE_ENV, freeTier: isFreeTier }, 'ClinicEase API listening')
+  if (isFreeTier) {
+    void seedIfEmpty()
+      .then((r) => logger.info(r, 'seedIfEmpty'))
+      .catch((err) => logger.error({ err }, 'seedIfEmpty failed'))
+  }
 })
 
 process.on('unhandledRejection', (err) => {

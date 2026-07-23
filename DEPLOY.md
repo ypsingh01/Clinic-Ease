@@ -63,13 +63,27 @@ LOG_LEVEL=info
 ```
 
 7. Deploy. Open `https://<service>.onrender.com/api/health` → `{ "ok": true, "db": "up" }`.
-8. **Seed** (Render Shell on the service):
+8. **Seed (free plan has no Shell)** — pick one:
 
-```bash
-npm run db:seed
+**A. Auto-seed (easiest):** With `FREE_TIER=true`, redeploy. On boot, if there are **zero doctors**, the API seeds demo data automatically. Then check `/api/doctors`.
+
+**B. Browser seed URL:** Add env `SEED_SECRET=some-long-secret`, redeploy, then open:
+
+```text
+https://<service>.onrender.com/api/setup/seed?secret=some-long-secret
 ```
 
-Demo logins (when `SEED_DEMO_USERS=true`): `patient@` / `doctor@` / `admin@clinicease.app` · password `demo1234` · OTP `123456`.
+**C. From your PC** (uses Neon URL, no Render Shell):
+
+```bash
+cd backend
+set DATABASE_URL=YOUR_NEON_POOLED_URL
+set SEED_DEMO_USERS=true
+npm install
+npx tsx prisma/seed.ts
+```
+
+Demo logins: `patient@` / `doctor@` / `admin@clinicease.app` · password `demo1234` · OTP `123456`.
 
 > Cold start: after idle sleep, the first request can take up to a minute. Refresh once.
 

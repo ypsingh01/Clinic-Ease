@@ -145,7 +145,7 @@ export function LoginPage() {
             </p>
           ) : null}
           <RecaptchaField onToken={onCaptcha} action="login" />
-          <Button type="submit" fullWidth loading={loading} disabled={!captchaToken}>
+          <Button type="submit" fullWidth loading={loading}>
             {mode === 'phone' ? 'Send OTP' : t('auth.signIn')}
           </Button>
         </form>

@@ -15,7 +15,9 @@ import { useClinic } from '@/clinic/ApiClinicProvider'
 import { staggerContainer, staggerItem } from '@/motion/variants'
 
 export function DoctorsPage() {
-  const { doctors } = useClinic()
+  // Must use ApiClinicProvider — mock ClinicEngineContext is not mounted in production.
+  const clinic = useClinic()
+  const doctors = clinic.doctors ?? []
   const [query, setQuery] = useState('')
   const [symptoms, setSymptoms] = useState<string[]>([])
   const [specialty, setSpecialty] = useState<Specialty | 'All'>('All')
@@ -84,7 +86,9 @@ export function DoctorsPage() {
           />
         </div>
         <div className="flex flex-wrap gap-2">
-          {(['All', ...new Set(active.map((d) => d.specialty))] as const).map((sp) => (
+          {(['All', ...Array.from(new Set(active.map((d) => d.specialty)))] as Array<
+            Specialty | 'All' | string
+          >).map((sp) => (
             <button
               key={sp}
               type="button"
@@ -112,9 +116,9 @@ export function DoctorsPage() {
             <Card interactive padding="md" className="flex h-full flex-col">
               <div className="flex items-start gap-3">
                 <img
-                  src={d.photoUrl}
+                  src={d.photoUrl || undefined}
                   alt=""
-                  className="size-12 shrink-0 rounded-2xl object-cover"
+                  className="bg-primary-tint size-12 shrink-0 rounded-2xl object-cover"
                 />
                 <div className="min-w-0">
                   <h3 className="font-display truncate text-[15px] font-medium">{d.name}</h3>

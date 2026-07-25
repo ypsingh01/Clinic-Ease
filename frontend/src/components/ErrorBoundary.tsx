@@ -23,9 +23,13 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="text-primary text-sm font-medium">Something went wrong</p>
             <h1 className="font-display mt-2 text-xl font-medium">We hit an unexpected error</h1>
             <p className="text-text-secondary mt-2 text-sm leading-relaxed">
-              Try reloading. If this keeps happening, sign out and back in — your mock session data
-              is stored locally.
+              Try reloading. If this keeps happening, sign out and back in.
             </p>
+            {this.state.error.message ? (
+              <p className="text-text-muted mt-3 break-words font-mono text-xs">
+                {this.state.error.message}
+              </p>
+            ) : null}
             <div className="mt-6 flex flex-wrap justify-center gap-2">
               <Button onClick={() => window.location.assign('/')}>Go home</Button>
               <Button

@@ -23,7 +23,7 @@ export function DoctorDetailPage() {
           <img
             src={doctor.photoUrl}
             alt=""
-            className="size-20 shrink-0 rounded-[20px] object-cover"
+            className="size-20 shrink-0 rounded-[var(--radius-card)] object-cover shadow-[var(--shadow-soft)]"
           />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-start justify-between gap-3">

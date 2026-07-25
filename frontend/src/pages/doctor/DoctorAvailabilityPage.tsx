@@ -11,7 +11,7 @@ export function DoctorAvailabilityPage() {
   const spotsHint = Math.round(60 / Math.max(1, Math.floor(60 / capacity)))
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <Banner tone="info" icon={<IconLeaf size={20} stroke={1.5} className="text-primary" />}>
         Edits apply going forward. Already-booked tokens keep their order — capacity changes
         don&apos;t reshuffle today&apos;s queue.
@@ -37,7 +37,7 @@ export function DoctorAvailabilityPage() {
             />
           </FormField>
         </div>
-        <div className="bg-primary-tint mt-5 rounded-[12px] px-4 py-3 text-sm">
+        <div className="bg-primary-tint mt-6 rounded-[var(--radius-card)] px-5 py-4 text-sm">
           <span className="text-primary font-medium">Live preview · </span>
           <span className="text-text-secondary">
             A 10:00–11:00 block would show “{capacity} of {capacity} spots” when empty
@@ -46,7 +46,7 @@ export function DoctorAvailabilityPage() {
         </div>
       </Card>
 
-      <div className="grid gap-3">
+      <div className="grid gap-4">
         {DAYS.map((day) => {
           const d = week[day]
           return (
@@ -57,10 +57,10 @@ export function DoctorAvailabilityPage() {
                     type="button"
                     aria-pressed={d.enabled}
                     onClick={() => updateDay(day, { enabled: !d.enabled, onLeave: false })}
-                    className={`flex size-10 items-center justify-center rounded-[10px] text-sm font-medium ${
+                    className={`flex size-10 items-center justify-center rounded-[var(--radius-control)] border text-sm font-medium ${
                       d.enabled && !d.onLeave
-                        ? 'bg-primary text-surface'
-                        : 'bg-[#F3F2EE] text-text-muted'
+                        ? 'bg-primary-tint text-primary border-primary/30'
+                        : 'bg-nav-hover text-text-muted border-transparent'
                     }`}
                   >
                     {day.slice(0, 2)}
@@ -164,7 +164,7 @@ function DayTimeline({
 
   return (
     <div className="mt-4">
-      <div className="flex h-3 overflow-hidden rounded-full bg-[#F3F2EE]">
+      <div className="flex h-3 overflow-hidden rounded-[var(--radius-pill)] bg-nav-hover">
         {morning > 0 ? (
           <div
             className="bg-primary-light/80 h-full"
@@ -214,7 +214,7 @@ function TimeField({
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
-        className="border-border bg-surface focus:border-primary disabled:opacity-40 min-h-10 rounded-[10px] border px-2 text-sm focus:shadow-[var(--focus-ring)] focus:outline-none"
+        className="border-border bg-surface focus:border-primary disabled:opacity-40 min-h-10 rounded-[var(--radius-control)] border px-2 text-sm focus:shadow-[var(--focus-ring)] focus:outline-none"
       />
     </label>
   )

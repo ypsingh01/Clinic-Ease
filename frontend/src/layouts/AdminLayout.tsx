@@ -22,10 +22,10 @@ const items: NavItem[] = [
 ]
 
 const titles: Record<string, { title: string; subtitle: string }> = {
-  '/admin': { title: 'Operations overview', subtitle: 'Clinic pulse across doctors and revenue' },
+  '/admin': { title: 'Clinic overview', subtitle: 'Calm pulse across doctors and revenue' },
   '/admin/doctors': { title: 'Doctor roster', subtitle: 'Profiles, capacity, and activation' },
   '/admin/appointments': {
-    title: 'Schedule grid',
+    title: 'Schedule',
     subtitle: 'Combined view across all doctors',
   },
   '/admin/book': { title: 'Manual booking', subtitle: 'Walk-ins and phone bookings' },
@@ -36,14 +36,14 @@ const titles: Record<string, { title: string; subtitle: string }> = {
     subtitle: 'Clinic-wide messages and delivery log',
   },
   '/admin/analytics': {
-    title: 'Performance analytics',
+    title: 'Performance',
     subtitle: 'Punctuality, heatmap, waitlist conversion',
   },
 }
 
 export function AdminLayout() {
   const { pathname } = useLocation()
-  const meta = titles[pathname] ?? { title: 'Admin', subtitle: 'Operations cockpit' }
+  const meta = titles[pathname] ?? { title: 'Admin', subtitle: 'Calm clinic operations' }
   return (
     <AppShell items={items} title={meta.title} subtitle={meta.subtitle} badge="Admin" dense>
       <Outlet />

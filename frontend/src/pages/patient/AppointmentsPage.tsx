@@ -70,14 +70,15 @@ export function AppointmentsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <Banner tone="info">
         Currently serving token <strong>#{servingToken}</strong>. Free cancel / reschedule until{' '}
         {CANCEL_POLICY_HOURS}h before your ETA. Estimates are not guarantees.
       </Banner>
 
       <section>
-        <h2 className="font-display mb-3 text-lg">Upcoming</h2>
+        <h2 className="font-display mb-1 text-lg">Upcoming</h2>
+        <p className="text-text-muted mb-4 text-sm">Your care timeline — next visit first.</p>
         {upcoming.length === 0 ? (
           <EmptyState
             icon={<IconCalendarEvent size={22} stroke={1.5} />}
@@ -87,19 +88,23 @@ export function AppointmentsPage() {
             onAction={() => navigate('/patient/book')}
           />
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="relative flex flex-col gap-3 before:absolute before:top-3 before:bottom-3 before:left-[11px] before:w-px before:bg-border md:before:left-[15px]">
             {upcoming.map((a) => {
               const doctor = getDoctor(a.doctorId)
               const allowed = canCancel(a)
               return (
-                <Card key={a.id} padding="md">
+                <Card key={a.id} padding="md" className="relative ml-6 md:ml-8">
+                  <span
+                    className="bg-primary border-bg absolute top-6 -left-6 size-3 rounded-full border-2 md:-left-8"
+                    aria-hidden
+                  />
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <StatusPill tone={statusTone[a.status] ?? 'neutral'}>
                         {a.status === 'checked_in' ? 'Checked in' : 'Upcoming'}
                       </StatusPill>
                       <h3 className="font-display mt-2 text-lg">{doctor?.name}</h3>
-                      <p className="text-text-secondary mt-1 text-sm">
+                      <p className="text-text-secondary mt-1 text-sm leading-relaxed">
                         {a.forName}
                         {a.dependentId ? ' · dependent' : ''} · {a.date} · {a.blockStart}–
                         {a.blockEnd}

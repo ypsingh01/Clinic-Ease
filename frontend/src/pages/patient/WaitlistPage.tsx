@@ -11,7 +11,7 @@ export function WaitlistPage() {
   const active = waitlist.filter((w) => w.status === 'waiting' || w.status === 'offered')
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <Banner tone="accent">
         Full hour blocks can still work out — join the waitlist and claim within about 10
         minutes when a token frees up.
@@ -26,7 +26,7 @@ export function WaitlistPage() {
           onAction={() => navigate('/patient/doctors')}
         />
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {active.map((w) => {
             const doctor = getDoctor(w.doctorId)
             return (

@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @import './styles/tokens.css';
 
-/* Brand loader pulse — design brief */
 @keyframes brand-pulse {
   0%,
   100% {
@@ -9,19 +8,20 @@
     opacity: 1;
   }
   50% {
-    transform: scale(1.08);
-    opacity: 0.85;
+    transform: scale(1.06);
+    opacity: 0.88;
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .brand-mark-pulse {
-    animation: brand-pulse 1.8s ease-in-out infinite;
+    animation: brand-pulse 2s ease-in-out infinite;
   }
 }
 
 @theme {
   --color-primary: var(--color-primary);
+  --color-primary-deep: var(--color-primary-deep);
   --color-primary-light: var(--color-primary-light);
   --color-primary-tint: var(--color-primary-tint);
   --color-accent: var(--color-accent);
@@ -29,9 +29,13 @@
   --color-bg: var(--color-bg);
   --color-surface: var(--color-surface);
   --color-text: var(--color-text);
+  --color-text-primary: var(--color-text-primary);
   --color-text-secondary: var(--color-text-secondary);
   --color-text-muted: var(--color-text-muted);
   --color-border: var(--color-border);
+  --color-overlay: var(--color-overlay);
+  --color-nav-hover: var(--color-nav-hover);
+  --color-care: var(--color-care);
   --color-success: var(--color-success);
   --color-success-tint: var(--color-success-tint);
   --color-warning: var(--color-warning);
@@ -39,6 +43,7 @@
   --color-danger: var(--color-danger);
   --color-danger-tint: var(--color-danger-tint);
 
+  --font-marketing: var(--font-marketing);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
@@ -47,24 +52,11 @@
   --radius-card: var(--radius-card);
   --radius-lg: var(--radius-lg);
 
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
   --shadow-modal: var(--shadow-modal);
-
-  --animate-splash-pulse: splash-pulse 1.8s var(--ease-standard) infinite;
 }
 
-@keyframes splash-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.06);
-    opacity: 0.85;
-  }
-}
-
-/* Reset — never leave default browser chrome */
 *,
 *::before,
 *::after {
@@ -82,17 +74,23 @@ body {
   min-height: 100dvh;
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-bg);
   background-image:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(15, 110, 86, 0.07), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(216, 90, 48, 0.05), transparent);
+    radial-gradient(ellipse 90% 55% at 8% -8%, rgba(15, 110, 86, 0.09), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 100% 0%, rgba(216, 90, 48, 0.07), transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(10, 74, 58, 0.04), transparent);
   background-attachment: fixed;
 }
 
 #root {
   min-height: 100dvh;
+}
+
+.font-marketing {
+  font-family: var(--font-marketing);
+  font-optical-sizing: auto;
 }
 
 .sr-only {
@@ -107,12 +105,6 @@ body {
   border-width: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .motion-safe\:animate-\[splash-pulse_1\.8s_ease-in-out_infinite\] {
-    animation: none !important;
-  }
-}
-
 h1,
 h2,
 h3,
@@ -121,9 +113,10 @@ h5,
 h6 {
   font-family: var(--font-display);
   font-weight: 500;
-  line-height: 1.25;
+  line-height: 1.2;
   color: var(--color-text);
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 p {
@@ -163,7 +156,7 @@ svg {
 
 ::selection {
   background: var(--color-primary-tint);
-  color: var(--color-primary);
+  color: var(--color-primary-deep);
 }
 
 :focus-visible {
@@ -171,7 +164,6 @@ svg {
   box-shadow: var(--focus-ring);
 }
 
-/* Themed scrollbars (WebKit) */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

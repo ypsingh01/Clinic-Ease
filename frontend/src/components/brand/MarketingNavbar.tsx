@@ -34,11 +34,11 @@ export function MarketingNavbar() {
       className={cn(
         'sticky top-0 z-40 transition-[background-color,box-shadow,backdrop-filter] duration-200',
         scrolled
-          ? 'bg-bg/90 border-border border-b shadow-[0_1px_0_rgba(211,209,199,0.6)] backdrop-blur-md'
+          ? 'bg-surface/80 border-border border-b shadow-[var(--shadow-soft)] backdrop-blur-md'
           : 'bg-transparent',
       )}
     >
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between gap-4 px-6 md:h-[72px] md:px-8">
+      <div className="mx-auto flex h-16 max-w-[var(--content-max)] items-center justify-between gap-4 px-6 md:h-[72px] md:px-8">
         <Logo />
         <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
           {NAV.map((item) => (

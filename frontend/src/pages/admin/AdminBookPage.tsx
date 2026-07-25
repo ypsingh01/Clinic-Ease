@@ -39,8 +39,8 @@ export function AdminBookPage() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-      <div className="flex flex-col gap-4">
+    <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="flex flex-col gap-5">
         <Banner tone="accent">
           Manual bookings append to the <strong>end of the queue</strong> so existing patients keep
           their token order and ETAs.
@@ -68,7 +68,7 @@ export function AdminBookPage() {
             <FormField label="Doctor" htmlFor="doc">
               <select
                 id="doc"
-                className="border-border bg-surface focus:border-primary min-h-[44px] w-full rounded-[10px] border px-3.5 text-[15px] focus:shadow-[var(--focus-ring)] focus:outline-none"
+                className="border-border bg-surface focus:border-primary min-h-[44px] w-full rounded-[var(--radius-control)] border px-3.5 text-[15px] focus:shadow-[var(--focus-ring)] focus:outline-none"
                 value={doctorId}
                 onChange={(e) => setDoctorId(e.target.value)}
               >
@@ -93,7 +93,7 @@ export function AdminBookPage() {
             <button
               type="button"
               onClick={() => setPayAtClinic((v) => !v)}
-              className="border-border flex min-h-[44px] items-center justify-between rounded-[12px] border px-4 text-left text-sm"
+              className="border-border bg-surface flex min-h-[44px] items-center justify-between rounded-[var(--radius-control)] border px-4 text-left text-sm hover:bg-nav-hover"
             >
               <span>Pay at clinic (skip Razorpay)</span>
               <StatusPill tone={payAtClinic ? 'accent' : 'neutral'}>
@@ -107,7 +107,7 @@ export function AdminBookPage() {
 
       <Card padding="lg">
         <h2 className="font-display text-lg">Recent manual bookings</h2>
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="mt-5 flex flex-col gap-3">
           {(manualBookings.length
             ? manualBookings
             : [
@@ -130,7 +130,7 @@ export function AdminBookPage() {
             return (
               <div
                 key={b.id}
-                className="border-border rounded-[12px] border bg-[#F7F5F0] px-3 py-3"
+                className="border-border bg-nav-hover rounded-[var(--radius-card)] border px-4 py-3.5 shadow-[var(--shadow-soft)]"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>

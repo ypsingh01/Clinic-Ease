@@ -8,7 +8,7 @@ import { Button, StatusPill } from '@/components/ui'
 import { SkipLink } from '@/a11y'
 import { useAuth } from '@/auth/AuthContext'
 import { cn } from '@/lib/cn'
-import { fadeIn } from '@/motion/variants'
+import { pageEnter } from '@/motion/variants'
 
 export type NavItem = {
   to: string
@@ -27,7 +27,7 @@ function NavItems({
   dense?: boolean
 }) {
   return (
-    <nav className="flex flex-col gap-1" aria-label="Portal">
+    <nav className="flex flex-col gap-0.5" aria-label="Portal">
       {items.map((item) => {
         const Icon = item.icon
         return (
@@ -38,11 +38,11 @@ function NavItems({
             onClick={onNavigate}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-sm font-medium no-underline transition-colors duration-120',
+                'flex items-center gap-3 rounded-[var(--radius-control)] px-3 py-2.5 text-sm no-underline transition-[color,background-color] duration-[var(--duration-fast)]',
                 dense && 'py-2 text-[13px]',
                 isActive
-                  ? 'bg-primary-tint text-primary'
-                  : 'text-text-secondary hover:bg-[#F3F2EE] hover:text-text',
+                  ? 'bg-care font-semibold text-primary'
+                  : 'text-text-secondary font-medium hover:bg-nav-hover hover:text-text',
               )
             }
           >
@@ -86,7 +86,7 @@ export function AppShell({
 
   const sidebar = (
     <div className="flex h-full flex-col">
-      <div className="border-border border-b px-4 py-4">
+      <div className="border-border border-b px-5 py-5">
         <Logo />
         {badge ? (
           <StatusPill tone="info" className="mt-3">
@@ -118,11 +118,11 @@ export function AppShell({
   return (
     <>
       <SkipLink />
-      <div className="bg-bg min-h-dvh md:grid md:grid-cols-[240px_1fr]">
-          <aside
-            className="border-border bg-surface/90 sticky top-0 hidden h-dvh border-r md:block"
-            aria-label="Main navigation"
-          >
+      <div className="bg-bg min-h-dvh md:grid md:grid-cols-[248px_1fr]">
+        <aside
+          className="border-border bg-surface/85 sticky top-0 hidden h-dvh border-r backdrop-blur-md md:block"
+          aria-label="Main navigation"
+        >
           {sidebar}
         </aside>
 
@@ -130,11 +130,11 @@ export function AppShell({
           <div className="fixed inset-0 z-40 md:hidden">
             <button
               type="button"
-              className="absolute inset-0 bg-[rgba(44,44,42,0.35)]"
+              className="bg-overlay absolute inset-0"
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
             />
-            <div className="border-border bg-surface relative z-10 h-full w-[min(100%,280px)] border-r shadow-[var(--shadow-modal)]">
+            <div className="border-border bg-surface relative z-10 h-full w-[min(100%,300px)] border-r shadow-[var(--shadow-modal)]">
               <div className="flex justify-end p-2">
                 <Button
                   variant="ghost"
@@ -152,7 +152,7 @@ export function AppShell({
         ) : null}
 
         <div className="flex min-h-dvh flex-col">
-          <header className="border-border bg-surface/80 sticky top-0 z-20 border-b px-4 py-3 backdrop-blur-md md:px-8">
+          <header className="border-border bg-surface/75 sticky top-0 z-20 border-b px-4 py-3.5 backdrop-blur-md md:px-8">
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
@@ -164,7 +164,9 @@ export function AppShell({
                 <IconMenu2 size={20} stroke={1.5} />
               </Button>
               <div className="min-w-0 flex-1">
-                <h1 className="font-display truncate text-lg font-medium md:text-xl">{title}</h1>
+                <h1 className="font-display truncate text-lg font-medium tracking-tight md:text-xl">
+                  {title}
+                </h1>
                 {subtitle ? (
                   <p className="text-text-secondary truncate text-sm">{subtitle}</p>
                 ) : null}
@@ -174,10 +176,10 @@ export function AppShell({
           </header>
           <motion.main
             id="main-content"
-            className="flex-1 px-4 py-6 md:px-8 md:py-8"
+            className="mx-auto w-full max-w-[var(--content-max)] flex-1 px-4 py-7 md:px-8 md:py-10"
             initial="hidden"
             animate="visible"
-            variants={fadeIn}
+            variants={pageEnter}
           >
             {children ?? <Outlet />}
           </motion.main>

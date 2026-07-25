@@ -71,7 +71,7 @@ export function DoctorHomePage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <QueueLiveAnnouncer servingToken={activePatient?.token ?? live[0]?.token ?? 0} />
 
       <div className="flex flex-wrap items-center gap-2">
@@ -83,8 +83,8 @@ export function DoctorHomePage() {
           }}
           className={
             view === 'today'
-              ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-xs font-medium'
-              : 'border-border text-text-secondary rounded-full border px-3 py-1.5 text-xs'
+              ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs font-medium'
+              : 'border-border text-text-secondary hover:border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs'
           }
         >
           Today
@@ -94,8 +94,8 @@ export function DoctorHomePage() {
           onClick={() => setView('week')}
           className={
             view === 'week'
-              ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-xs font-medium'
-              : 'border-border text-text-secondary rounded-full border px-3 py-1.5 text-xs'
+              ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs font-medium'
+              : 'border-border text-text-secondary hover:border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs'
           }
         >
           Week
@@ -119,8 +119,8 @@ export function DoctorHomePage() {
                 }}
                 className={
                   d.date === queueDate
-                    ? 'border-primary bg-primary-tint rounded-[12px] border p-3 text-left'
-                    : 'border-border hover:border-primary/30 rounded-[12px] border bg-surface p-3 text-left'
+                    ? 'border-primary bg-primary-tint rounded-[var(--radius-card)] border p-3 text-left shadow-[var(--shadow-soft)]'
+                    : 'border-border hover:border-primary/30 rounded-[var(--radius-card)] border bg-surface p-3 text-left'
                 }
               >
                 <p className="text-text-muted text-xs font-medium">{d.day}</p>
@@ -189,9 +189,9 @@ export function DoctorHomePage() {
         <Card padding="md">
           <div className="mb-4 flex items-center justify-between gap-2">
             <h2 className="font-display text-lg">Token queue</h2>
-            <StatusPill tone="info">Live command</StatusPill>
+            <StatusPill tone="info">Live</StatusPill>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2.5">
             {live.map((p) => (
               <TokenQueueRow
                 key={p.id}
@@ -261,7 +261,7 @@ export function DoctorHomePage() {
 
           {done.length ? (
             <div className="mt-6">
-              <p className="text-text-muted mb-2 text-xs font-medium tracking-wide uppercase">
+              <p className="text-text-muted mb-2 text-xs font-medium tracking-wide">
                 Earlier today
               </p>
               <div className="flex flex-col gap-2 opacity-80">
@@ -280,8 +280,8 @@ export function DoctorHomePage() {
           ) : null}
         </Card>
 
-        <Card tint="primary" padding="lg" className="h-fit">
-          <p className="text-primary text-xs font-medium tracking-wide uppercase">Now seeing</p>
+        <Card tint="care" padding="lg" className="h-fit shadow-[var(--shadow-lift)]">
+          <p className="text-primary text-xs font-medium tracking-wide">Now seeing</p>
           {activePatient ? (
             <>
               <h3 className="font-display mt-2 text-xl">{activePatient.name}</h3>
@@ -395,7 +395,7 @@ export function DoctorHomePage() {
 
 function InfoRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="bg-surface/80 rounded-[10px] border border-primary/10 px-3 py-2 text-sm">
+    <div className="bg-surface/80 rounded-[var(--radius-control)] border border-primary/10 px-3 py-2 text-sm">
       <span className="text-text-muted">{label}</span>
       <span className={`ml-2 font-medium ${mono ? 'font-mono' : ''}`}>{value}</span>
     </div>

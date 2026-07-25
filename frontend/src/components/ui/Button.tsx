@@ -18,19 +18,19 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'>
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'bg-accent text-white shadow-none hover:brightness-105 active:brightness-95 focus-visible:shadow-[var(--focus-ring)]',
+    'bg-accent text-white shadow-[var(--shadow-soft)] hover:brightness-[1.05] hover:shadow-[var(--shadow-lift)] active:brightness-95 focus-visible:shadow-[var(--focus-ring)]',
   secondary:
-    'bg-primary text-white hover:brightness-110 active:brightness-95 focus-visible:shadow-[var(--focus-ring)]',
+    'bg-primary-tint text-primary border border-primary/20 hover:border-primary/40 hover:bg-care active:brightness-95 focus-visible:shadow-[var(--focus-ring)]',
   ghost:
-    'bg-transparent text-primary border border-border hover:bg-primary-tint/60 active:bg-primary-tint focus-visible:shadow-[var(--focus-ring)]',
+    'bg-transparent text-primary hover:bg-primary-tint/80 active:bg-primary-tint focus-visible:shadow-[var(--focus-ring)]',
   danger:
-    'bg-danger-tint text-danger border border-transparent hover:brightness-95 focus-visible:shadow-[var(--focus-ring)]',
+    'bg-danger-tint text-danger hover:brightness-95 focus-visible:shadow-[var(--focus-ring)]',
 }
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'h-9 min-h-9 px-3 text-sm gap-1.5 rounded-[10px]',
-  md: 'h-11 min-h-[44px] px-4 text-[15px] gap-2 rounded-[10px]',
-  lg: 'h-12 min-h-12 px-6 text-base gap-2 rounded-[10px]',
+  sm: 'h-10 min-h-10 px-3.5 text-sm gap-1.5 rounded-[var(--radius-control)]',
+  md: 'h-12 min-h-[48px] px-5 text-[15px] gap-2 rounded-[var(--radius-control)]',
+  lg: 'h-13 min-h-13 px-7 text-base gap-2 rounded-[var(--radius-control)]',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -59,7 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       disabled={isDisabled}
       className={cn(
         'inline-flex items-center justify-center font-medium tracking-tight select-none',
-        'transition-[filter,background-color,border-color,color] duration-120',
+        'transition-[filter,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)]',
         'disabled:pointer-events-none disabled:opacity-45',
         variantClasses[variant],
         sizeClasses[size],
@@ -78,7 +78,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ) : (
         leftIcon
       )}
-      <span>{children}</span>
+      <span className={loading ? 'opacity-80' : undefined}>{children}</span>
       {!loading && rightIcon}
     </motion.button>
   )

@@ -15,9 +15,9 @@ export function NotificationsPage() {
   const unread = notifications.filter((n) => !n.read).length
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-text-secondary text-sm">
+        <p className="text-text-secondary text-sm leading-relaxed">
           {unread ? `${unread} unread` : 'All caught up'} · mirrors WhatsApp templates
         </p>
         {unread ? (
@@ -34,12 +34,12 @@ export function NotificationsPage() {
           description="Confirmations, 24h/1h reminders, and live ETA shifts will appear here."
         />
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {notifications.map((n) => (
             <Card
               key={n.id}
               padding="md"
-              className={n.read ? 'opacity-80' : 'border-primary/25'}
+              className={n.read ? 'opacity-80' : 'border-primary/25 shadow-[var(--shadow-soft)]'}
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>

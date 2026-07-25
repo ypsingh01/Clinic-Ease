@@ -96,25 +96,25 @@ export function LandingPage() {
             aria-hidden
             style={{
               backgroundImage:
-                'linear-gradient(105deg, rgba(253,251,247,0.94) 0%, rgba(253,251,247,0.78) 38%, rgba(15,110,86,0.28) 100%), url(https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=2400&q=80)',
+                'linear-gradient(105deg, rgba(250,248,244,0.95) 0%, rgba(250,248,244,0.72) 36%, rgba(10,74,58,0.45) 100%), url(https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=2400&q=80)',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
           />
-          <div className="relative mx-auto flex min-h-[calc(100dvh-4.5rem)] max-w-[1200px] flex-col justify-center px-6 py-16 md:px-8 md:py-20">
+          <div className="relative mx-auto flex min-h-[calc(100dvh-4.5rem)] max-w-[var(--content-max)] flex-col justify-center px-6 py-16 md:px-8 md:py-20">
             <motion.div
               className="max-w-xl"
               initial={reduceMotion ? false : 'hidden'}
               animate="visible"
               variants={fadeUp}
             >
-              <p className="font-display text-primary text-3xl font-semibold tracking-tight md:text-4xl">
+              <p className="font-display text-primary text-4xl font-semibold tracking-tight md:text-5xl">
                 ClinicEase
               </p>
-              <h1 className="font-display text-text mt-4 text-[1.75rem] leading-[1.2] font-medium md:text-[2.15rem]">
+              <h1 className="font-marketing text-text mt-5 text-[2.15rem] leading-[1.12] font-medium md:text-[2.75rem]">
                 Your care, simplified
               </h1>
-              <p className="text-text-secondary mt-4 max-w-md text-[15px] leading-relaxed md:text-base">
+              <p className="text-text-secondary mt-5 max-w-md text-base leading-relaxed md:text-lg">
                 Book into real hour blocks, get a token and estimated window, and follow the live
                 queue — without the phone tag.
               </p>
@@ -201,7 +201,7 @@ export function LandingPage() {
               {DOCTORS.map((d) => (
                 <motion.div key={d.name} variants={staggerItem}>
                   <Card interactive padding="md" className="h-full">
-                    <div className="bg-primary text-surface font-display flex size-14 items-center justify-center rounded-2xl text-lg font-medium">
+                    <div className="bg-primary-tint text-primary font-display flex size-14 items-center justify-center rounded-[var(--radius-card)] text-lg font-medium">
                       {d.initials}
                     </div>
                     <h3 className="font-display mt-4 text-[15px] font-medium">{d.name}</h3>
@@ -397,7 +397,7 @@ function FeatureStrip({
 }) {
   return (
     <div className="border-border flex gap-3 px-5 py-5 md:border-r md:last:border-r-0">
-      <div className="bg-primary-tint text-primary flex size-10 shrink-0 items-center justify-center rounded-[10px]">
+      <div className="bg-primary-tint text-primary flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-control)]">
         {icon}
       </div>
       <div>

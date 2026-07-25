@@ -55,13 +55,13 @@ export function TokenQueueRow({
           : undefined
       }
       className={cn(
-        'border-border bg-surface flex items-center gap-3 rounded-[12px] border px-3.5 py-3 transition-all duration-200',
-        active && 'border-primary bg-primary-tint/40 ring-primary/15 ring-1',
+        'border-border bg-surface flex items-center gap-3.5 rounded-[var(--radius-card)] border px-4 py-3.5 shadow-[var(--shadow-soft)] transition-[border-color,box-shadow] duration-[var(--duration-normal)]',
+        active && 'border-primary bg-care shadow-[var(--shadow-lift)] ring-1 ring-primary/15',
         onClick && 'hover:border-primary/30 cursor-pointer',
         className,
       )}
     >
-      <div className="bg-primary text-surface font-mono flex size-10 shrink-0 items-center justify-center rounded-[10px] text-sm font-medium">
+      <div className="bg-primary text-surface font-mono flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-control)] text-sm font-medium">
         #{token}
       </div>
       <div className="min-w-0 flex-1">

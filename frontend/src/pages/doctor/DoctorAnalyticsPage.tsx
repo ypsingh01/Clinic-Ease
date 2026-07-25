@@ -16,8 +16,8 @@ export function DoctorAnalyticsPage() {
   }))
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="flex flex-col gap-8">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Avg consult (today)" value={avgDuration ? `${avgDuration} min` : '—'} />
         <StatTile label="Capacity setting" value={`${capacity}/hr`} hint="Your hourly spots" />
         <StatTile label="No-show rate (today)" value={`${noShowRate}%`} />
@@ -28,7 +28,7 @@ export function DoctorAnalyticsPage() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2">
         <Card padding="lg">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="font-display text-lg">Weekly load</h2>
@@ -41,7 +41,7 @@ export function DoctorAnalyticsPage() {
             <h2 className="font-display text-lg">Punctuality drift</h2>
             <StatusPill tone="warning">|ETA − actual| mins</StatusPill>
           </div>
-          <TrendChart data={punctualityAbs} height={210} color="#D85A30" />
+          <TrendChart data={punctualityAbs} height={210} color="var(--color-accent)" />
           <p className="text-text-muted mt-3 text-xs leading-relaxed">
             Lower is better. Large drift often means capacity is set too high for real consult
             length — try lowering patients/hour.

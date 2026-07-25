@@ -44,12 +44,13 @@ export function RegisterPage() {
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-      <h1 className="font-display text-2xl font-medium">{t('auth.create')}</h1>
+      <h1 className="font-display text-2xl font-medium tracking-tight">{t('auth.create')}</h1>
       <p className="text-text-secondary mt-2 text-sm leading-relaxed">
-        Register with email and phone. OTP links WhatsApp for reminders and live ETA updates.
+        Register with email and phone. We&apos;ll send a one-time code to link WhatsApp
+        reminders and live ETA updates.
       </p>
 
-      <Card className="mt-8" padding="lg">
+      <Card className="mt-8 shadow-[var(--shadow-soft)]" padding="lg">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <FormField label="Full name" htmlFor="reg-name">
             <Input

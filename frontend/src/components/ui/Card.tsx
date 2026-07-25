@@ -9,19 +9,20 @@ type CardProps = {
   className?: string
   padding?: 'sm' | 'md' | 'lg'
   interactive?: boolean
-  tint?: 'none' | 'primary' | 'accent'
+  tint?: 'none' | 'primary' | 'accent' | 'care'
 } & Omit<HTMLMotionProps<'div'>, 'children'>
 
 const paddingMap = {
   sm: 'p-4',
-  md: 'p-5',
-  lg: 'p-6',
+  md: 'p-5 md:p-6',
+  lg: 'p-6 md:p-8',
 } as const
 
 const tintMap = {
   none: 'bg-surface',
-  primary: 'bg-primary-tint/80',
-  accent: 'bg-accent-tint/80',
+  primary: 'bg-primary-tint/70',
+  accent: 'bg-accent-tint/70',
+  care: 'bg-care',
 } as const
 
 export function Card({
@@ -37,15 +38,15 @@ export function Card({
   return (
     <motion.div
       className={cn(
-        'rounded-[var(--radius-card)] border border-border',
+        'rounded-[var(--radius-card)] border border-border shadow-[var(--shadow-soft)]',
         tintMap[tint],
         paddingMap[padding],
         interactive &&
-          'cursor-pointer transition-[border-color,transform] duration-200 hover:border-primary/35',
+          'cursor-pointer transition-[border-color,box-shadow,transform] duration-[var(--duration-normal)] hover:border-primary/30 hover:shadow-[var(--shadow-lift)]',
         className,
       )}
       whileHover={
-        interactive && !reduceMotion ? { y: -2, transition: transitions.fast } : undefined
+        interactive && !reduceMotion ? { y: -3, transition: transitions.fast } : undefined
       }
       {...props}
     >

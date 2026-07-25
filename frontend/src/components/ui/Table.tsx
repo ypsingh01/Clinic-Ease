@@ -40,12 +40,12 @@ export function Table<T>({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[520px] border-collapse text-left text-sm">
           <thead>
-            <tr className="bg-[#F7F5F0]">
+            <tr className="bg-nav-hover">
               {columns.map((col) => (
                 <th
                   key={col.key}
                   className={cn(
-                    'text-text-secondary border-border border-b px-4 py-3 text-xs font-medium tracking-wide',
+                    'text-text-secondary border-border border-b px-4 py-3.5 text-xs font-medium',
                     col.align === 'right' && 'text-right',
                     col.align === 'center' && 'text-center',
                     col.className,

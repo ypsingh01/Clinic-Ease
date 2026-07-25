@@ -75,7 +75,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={reduceMotion ? undefined : { opacity: 0, y: 8 }}
                 className={cn(
-                  'pointer-events-auto flex gap-3 rounded-[12px] border px-3.5 py-3 shadow-[var(--shadow-modal)]',
+                  'pointer-events-auto flex gap-3 rounded-[var(--radius-card)] border px-3.5 py-3 shadow-[var(--shadow-soft)]',
                   tones[t.tone],
                 )}
                 role="status"

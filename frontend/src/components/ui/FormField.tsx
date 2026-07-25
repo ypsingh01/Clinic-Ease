@@ -1,4 +1,5 @@
 import { forwardRef, type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes } from 'react'
+import { IconAlertCircle } from '@tabler/icons-react'
 import { cn } from '@/lib/cn'
 
 type FieldProps = {
@@ -12,24 +13,25 @@ type FieldProps = {
 
 export function FormField({ label, hint, error, className, children, htmlFor }: FieldProps) {
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
-      <label htmlFor={htmlFor} className="text-sm font-medium text-text">
+    <div className={cn('flex flex-col gap-2', className)}>
+      <label htmlFor={htmlFor} className="text-text text-sm font-medium">
         {label}
       </label>
       {children}
       {error ? (
-        <p className="text-danger text-xs" role="alert">
-          {error}
+        <p className="text-danger flex items-start gap-1.5 text-xs leading-relaxed" role="alert">
+          <IconAlertCircle size={14} stroke={1.5} className="mt-0.5 shrink-0" aria-hidden />
+          <span>{error}</span>
         </p>
       ) : hint ? (
-        <p className="text-text-muted text-xs">{hint}</p>
+        <p className="text-text-muted text-xs leading-relaxed">{hint}</p>
       ) : null}
     </div>
   )
 }
 
 const controlBase =
-  'w-full min-h-[44px] rounded-[10px] border border-border bg-surface px-3.5 text-[15px] text-text placeholder:text-text-muted transition-[border-color,box-shadow] duration-120 hover:border-primary/30 focus:border-primary focus:outline-none focus:shadow-[var(--focus-ring)] disabled:opacity-50'
+  'w-full min-h-[48px] rounded-[var(--radius-control)] border border-border bg-surface px-4 text-[15px] text-text placeholder:text-text-muted transition-[border-color,box-shadow] duration-[var(--duration-fast)] hover:border-primary/25 focus:border-primary focus:outline-none focus:shadow-[var(--focus-ring)] disabled:opacity-50'
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   function Input({ className, id, ...props }, ref) {
@@ -45,7 +47,7 @@ export const Textarea = forwardRef<
     <textarea
       ref={ref}
       id={id}
-      className={cn(controlBase, 'min-h-[96px] resize-y py-3', className)}
+      className={cn(controlBase, 'min-h-[110px] resize-y py-3.5', className)}
       {...props}
     />
   )

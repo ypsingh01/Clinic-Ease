@@ -18,7 +18,31 @@ export function Spinner({ className, size = 'md' }: { className?: string; size?:
 
 export function Skeleton({ className }: { className?: string }) {
   return (
-    <div className={cn('bg-border/50 animate-pulse rounded-[10px]', className)} aria-hidden />
+    <div
+      className={cn(
+        'bg-border/40 animate-pulse rounded-[var(--radius-control)]',
+        className,
+      )}
+      aria-hidden
+    />
+  )
+}
+
+/** Layout-shaped loading placeholder for lists and dashboards */
+export function SkeletonBlock({
+  lines = 3,
+  className,
+}: {
+  lines?: number
+  className?: string
+}) {
+  return (
+    <div className={cn('flex flex-col gap-3', className)} aria-hidden>
+      <Skeleton className="h-5 w-1/3" />
+      {Array.from({ length: lines }).map((_, i) => (
+        <Skeleton key={i} className={cn('h-4', i === lines - 1 ? 'w-2/3' : 'w-full')} />
+      ))}
+    </div>
   )
 }
 

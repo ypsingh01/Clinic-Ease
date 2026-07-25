@@ -29,7 +29,7 @@ export function ProgressBar({
         aria-label={label}
       >
         <div
-          className="bg-primary-light h-full rounded-full transition-[width] duration-320 ease-[var(--ease-emphasized)]"
+          className="bg-primary-light h-full rounded-full transition-[width] duration-[var(--duration-slow)] ease-[var(--ease-emphasized)]"
           style={{ width: `${pct}%` }}
         />
       </div>

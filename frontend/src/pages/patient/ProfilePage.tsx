@@ -12,8 +12,8 @@ export function ProfilePage() {
   const [etaAlerts, setEtaAlerts] = useState(true)
 
   return (
-    <div className="mx-auto grid max-w-3xl gap-4">
-      <Card padding="lg">
+    <div className="mx-auto grid max-w-3xl gap-8">
+      <Card padding="lg" className="shadow-[var(--shadow-soft)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-xl">Account</h2>
           <StatusPill tone={user?.whatsappLinked ? 'success' : 'warning'}>
@@ -89,11 +89,11 @@ function ToggleRow({
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className="border-border flex min-h-[44px] items-center justify-between rounded-[12px] border px-4 text-left"
+      className="border-border bg-surface flex min-h-[44px] items-center justify-between rounded-[var(--radius-control)] border px-4 text-left hover:bg-nav-hover"
     >
       <span className="text-sm font-medium">{label}</span>
       <span
-        className={`relative h-6 w-11 rounded-full transition-colors ${checked ? 'bg-primary' : 'bg-border'}`}
+        className={`relative h-6 w-11 rounded-[var(--radius-pill)] transition-colors ${checked ? 'bg-primary' : 'bg-border'}`}
         aria-hidden
       >
         <span

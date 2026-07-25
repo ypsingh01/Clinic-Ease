@@ -52,7 +52,7 @@ export function Drawer({
           <motion.button
             type="button"
             aria-label="Close panel"
-            className="absolute inset-0 bg-[rgba(44,44,42,0.35)]"
+            className="bg-overlay absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -33,7 +33,7 @@ export function DependentsPage() {
   const activeDoctors = doctors.filter((d) => d.active)
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-text-secondary max-w-xl text-sm leading-relaxed">
           Book visits for family members. Clinicians see the patient name and relation —
@@ -51,7 +51,7 @@ export function DependentsPage() {
           onAction={() => setOpen(true)}
         />
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {dependents.map((d) => (
             <Card key={d.id} padding="md" className="flex flex-col">
               <StatusPill tone="info">{d.relation}</StatusPill>
@@ -104,7 +104,7 @@ export function DependentsPage() {
           <FormField label="Relation" htmlFor="dep-rel">
             <select
               id="dep-rel"
-              className="border-border bg-surface focus:border-primary min-h-[44px] w-full rounded-[10px] border px-3.5 text-[15px] focus:shadow-[var(--focus-ring)] focus:outline-none"
+              className="border-border bg-surface focus:border-primary min-h-[44px] w-full rounded-[var(--radius-control)] border px-3.5 text-[15px] focus:shadow-[var(--focus-ring)] focus:outline-none"
               value={relation}
               onChange={(e) => setRelation(e.target.value as typeof relation)}
             >
@@ -148,7 +148,7 @@ export function DependentsPage() {
               onClick={() => setBookFor(null)}
             >
               <Card interactive padding="sm" className="flex items-center gap-3">
-                <img src={d.photoUrl} alt="" className="size-10 rounded-xl object-cover" />
+                <img src={d.photoUrl} alt="" className="size-10 rounded-[var(--radius-control)] object-cover" />
                 <div>
                   <p className="font-display text-sm font-medium">{d.name}</p>
                   <p className="text-primary text-xs">{d.specialty}</p>

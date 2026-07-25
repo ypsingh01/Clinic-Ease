@@ -48,7 +48,7 @@ export function AdminDoctorsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-text-secondary max-w-xl text-sm leading-relaxed">
           Fixed roster of 5–6 doctors. Deactivate instead of deleting — bookings stay intact.
@@ -56,7 +56,7 @@ export function AdminDoctorsPage() {
         <Button onClick={() => setOpenAdd(true)}>Add doctor</Button>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {doctors.map((d) => (
           <Card
             key={d.id}
@@ -66,7 +66,7 @@ export function AdminDoctorsPage() {
             onClick={() => openDoctor(d)}
           >
             <div className="flex items-start gap-3">
-              <div className="bg-primary text-surface font-display flex size-12 shrink-0 items-center justify-center rounded-2xl text-sm font-medium">
+              <div className="bg-primary-tint text-primary font-display flex size-12 shrink-0 items-center justify-center rounded-[var(--radius-card)] text-sm font-medium">
                 {d.initials}
               </div>
               <div className="min-w-0 flex-1">

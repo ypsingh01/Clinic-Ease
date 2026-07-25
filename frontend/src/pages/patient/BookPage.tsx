@@ -145,7 +145,7 @@ export function BookPage() {
                       className="size-10 rounded-xl object-cover"
                     />
                     <div>
-                      <p className="font-display font-medium text-[#2C2C2A]">{d.name}</p>
+                      <p className="font-display text-text font-medium">{d.name}</p>
                       <p className="text-primary text-sm">{d.specialty}</p>
                     </div>
                   </div>
@@ -256,10 +256,16 @@ export function BookPage() {
 
   const steps: Step[] = ['schedule', 'intake', 'hold', 'pay', 'done']
   const stepIndex = steps.indexOf(step)
+  const stepLabels = [
+    { key: 'schedule', label: 'Schedule' },
+    { key: 'intake', label: 'Intake' },
+    { key: 'hold', label: 'Hold' },
+    { key: 'pay', label: 'Pay' },
+  ] as const
 
   return (
     <motion.div
-      className="mx-auto flex max-w-4xl flex-col gap-6"
+      className="mx-auto flex max-w-2xl flex-col gap-7 lg:max-w-4xl"
       variants={fadeUp}
       initial="hidden"
       animate="visible"
@@ -283,36 +289,53 @@ export function BookPage() {
         <Banner tone="accent">Waitlist claim — complete payment to lock this hour block.</Banner>
       ) : null}
 
-      <div className="flex gap-2">
-        {['Schedule', 'Intake', 'Hold', 'Pay'].map((label, i) => (
-          <div
-            key={label}
-            className={`h-1.5 flex-1 rounded-full ${i <= Math.min(stepIndex, 3) ? 'bg-primary-light' : 'bg-border'}`}
-          />
-        ))}
+      <div className="border-border bg-surface/90 sticky top-[4.5rem] z-10 rounded-[var(--radius-card)] border p-4 shadow-[var(--shadow-soft)] backdrop-blur-md md:top-4">
+        <p className="text-text-muted mb-3 text-xs font-medium tracking-wide">
+          Step {Math.min(stepIndex + 1, 4)} of 4 — almost there
+        </p>
+        <div className="flex gap-2" role="list" aria-label="Booking progress">
+          {stepLabels.map((s, i) => {
+            const done = i < Math.min(stepIndex, 3)
+            const current = i === Math.min(stepIndex, 3) && step !== 'done'
+            return (
+              <div key={s.key} className="flex min-w-0 flex-1 flex-col gap-1.5" role="listitem">
+                <div
+                  className={`h-2 rounded-full transition-[background-color] duration-[var(--duration-normal)] ${
+                    done || current || step === 'done' ? 'bg-primary-light' : 'bg-border'
+                  }`}
+                />
+                <span
+                  className={`truncate text-[11px] ${
+                    current || step === 'done' ? 'text-primary font-medium' : 'text-text-muted'
+                  }`}
+                >
+                  {s.label}
+                </span>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
       {step === 'schedule' ? (
-        <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
+        <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
           <Calendar
             value={date}
             onChange={setDate}
             minDate={new Date()}
             availableDays={doctor.availableDays}
           />
-          <div className="flex flex-col gap-4">
-            <Card padding="md">
-              <p className="text-text-muted text-xs font-medium tracking-wide uppercase">
-                Booking for
-              </p>
+          <div className="flex flex-col gap-5">
+            <Card padding="md" tint="care">
+              <p className="text-text text-sm font-medium">Who is this visit for?</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setDependentId(null)}
                   className={
                     dependentId == null
-                      ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-sm'
-                      : 'border-border rounded-full border px-3 py-1.5 text-sm'
+                      ? 'bg-primary text-surface rounded-[var(--radius-pill)] px-3.5 py-2 text-sm font-medium'
+                      : 'border-border text-text-secondary hover:border-primary/30 rounded-[var(--radius-pill)] border bg-surface px-3.5 py-2 text-sm'
                   }
                 >
                   Myself
@@ -324,8 +347,8 @@ export function BookPage() {
                     onClick={() => setDependentId(d.id)}
                     className={
                       dependentId === d.id
-                        ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-sm'
-                        : 'border-border rounded-full border px-3 py-1.5 text-sm'
+                        ? 'bg-primary text-surface rounded-[var(--radius-pill)] px-3.5 py-2 text-sm font-medium'
+                        : 'border-border text-text-secondary hover:border-primary/30 rounded-[var(--radius-pill)] border bg-surface px-3.5 py-2 text-sm'
                     }
                   >
                     {d.name} · {d.relation}
@@ -334,15 +357,17 @@ export function BookPage() {
               </div>
             </Card>
             <div>
-              <h3 className="font-display mb-3 text-lg">Hour blocks</h3>
-              <p className="text-text-muted mb-3 text-xs">
-                Capacity updates live across patient, doctor, and admin views.
+              <h3 className="font-display mb-1 text-xl">When works for you?</h3>
+              <p className="text-text-muted mb-4 text-sm leading-relaxed">
+                Open hours show spots left. Full hours can join the waitlist.
               </p>
               <HourBlockPicker blocks={blocks} value={blockId} onChange={onSelectBlock} />
             </div>
             <Button
               disabled={!selectedBlock || selectedBlock.state !== 'open'}
               onClick={() => setStep('intake')}
+              fullWidth
+              className="lg:w-auto lg:self-start"
             >
               Continue to intake
             </Button>
@@ -352,15 +377,15 @@ export function BookPage() {
 
       {step === 'intake' ? (
         <Card padding="lg">
-          <h3 className="font-display text-xl">Pre-visit intake</h3>
-          <p className="text-text-secondary mt-1 text-sm">
+          <h3 className="font-display text-xl">Anything your doctor should know?</h3>
+          <p className="text-text-secondary mt-1 text-sm leading-relaxed">
             Shared with {doctor.name} before your consult. Keep it brief.
           </p>
           <FormField
             className="mt-5"
             label="What should the doctor know?"
             htmlFor="intake"
-            hint="Symptoms, duration, allergies — guidance for the visit, not a diagnosis form."
+            hint="Symptoms, duration, allergies — guidance for the visit, not a diagnosis."
           >
             <Textarea
               id="intake"
@@ -379,18 +404,18 @@ export function BookPage() {
       ) : null}
 
       {step === 'hold' || step === 'pay' ? (
-        <Card padding="lg">
+        <Card padding="lg" className={holdLeft < 60 ? 'border-accent/40' : undefined} tint="care">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <StatusPill tone="warning" icon={<IconLock size={14} />}>
+              <StatusPill tone={holdLeft < 60 ? 'accent' : 'warning'} icon={<IconLock size={14} />}>
                 Token held · {holdLabel}
               </StatusPill>
               <h3 className="font-display mt-3 text-xl">Token #{nextToken}</h3>
               <p className="text-text-secondary mt-1 text-sm">
                 {forName} · {dateISO} · {selectedBlock?.startLabel}–{selectedBlock?.endLabel}
               </p>
-              <p className="text-text-muted mt-2 text-xs">
-                Estimated window calculated at confirm · estimate, not a guarantee
+              <p className="text-text-muted mt-2 text-xs leading-relaxed">
+                Estimated window is set at confirm — an estimate, not a guarantee.
               </p>
             </div>
             <StatusPill tone="accent">₹{doctor.feeInr}</StatusPill>
@@ -404,11 +429,11 @@ export function BookPage() {
               <Button onClick={() => setStep('pay')}>Continue to payment</Button>
             </div>
           ) : (
-            <div className="border-border mt-6 rounded-[12px] border bg-[#F7F5F0] p-4">
-              <p className="font-display text-sm font-medium">Razorpay checkout (sandbox mock)</p>
+            <div className="border-border bg-nav-hover mt-6 rounded-[var(--radius-card)] border p-4">
+              <p className="font-display text-sm font-medium">Secure checkout</p>
               <p className="text-text-secondary mt-1 text-xs leading-relaxed">
-                Order created server-side in production. Webhook confirms payment before the
-                token becomes permanent.
+                Razorpay sandbox mock. In production, payment confirms before your token becomes
+                permanent.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Button variant="ghost" onClick={() => setStep('hold')}>
@@ -430,12 +455,12 @@ export function BookPage() {
             You&apos;re booked — token #{confirmedToken ?? nextToken}
           </h3>
           <p className="text-text-secondary mt-2 text-sm leading-relaxed">
-            Confirmation sent in-app and WhatsApp. Watch the live queue on your dashboard.
+            Confirmation is in-app and on WhatsApp. Watch the live queue on your dashboard.
             Reminders go out 24h and 1h before your estimated window.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             <Button onClick={() => navigate('/patient/appointments')}>View appointments</Button>
-            <Button variant="ghost" onClick={() => navigate('/patient')}>
+            <Button variant="secondary" onClick={() => navigate('/patient')}>
               Go to dashboard
             </Button>
           </div>

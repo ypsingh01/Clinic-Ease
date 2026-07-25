@@ -19,8 +19,8 @@ export function AdminRevenuePage() {
     .reduce((s, p) => s + p.amount, 0)
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid gap-3 sm:grid-cols-3">
+    <div className="flex flex-col gap-10">
+      <div className="grid gap-5 sm:grid-cols-3">
         <StatTile label="Paid revenue" value={`₹${revenueTotal.toLocaleString('en-IN')}`} />
         <StatTile label="Pending at clinic" value={`₹${pending.toLocaleString('en-IN')}`} />
         <StatTile label="Refunded" value={`₹${refunded.toLocaleString('en-IN')}`} />
@@ -28,10 +28,10 @@ export function AdminRevenuePage() {
 
       <Card padding="lg">
         <h2 className="font-display mb-2 text-lg">Revenue trend (₹ thousands)</h2>
-        <TrendChart data={REVENUE_TREND} color="#D85A30" height={200} />
+        <TrendChart data={REVENUE_TREND} color="var(--color-accent)" height={200} />
       </Card>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5">
         {(['all', 'paid', 'pending', 'refunded'] as const).map((f) => (
           <button
             key={f}
@@ -39,8 +39,8 @@ export function AdminRevenuePage() {
             onClick={() => setFilter(f)}
             className={
               filter === f
-                ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-xs font-medium capitalize'
-                : 'border-border rounded-full border px-3 py-1.5 text-xs capitalize'
+                ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs font-medium capitalize'
+                : 'border-border text-text-secondary rounded-[var(--radius-pill)] border bg-surface px-3 py-1.5 text-xs capitalize'
             }
           >
             {f}

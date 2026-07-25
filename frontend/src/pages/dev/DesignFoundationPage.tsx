@@ -33,10 +33,10 @@ import { fadeUp, staggerContainer, staggerItem } from '@/motion/variants'
 
 const tokens = [
   { name: 'Primary', hex: '#0F6E56', className: 'bg-primary' },
-  { name: 'Primary light', hex: '#5DCAA5', className: 'bg-primary-light' },
+  { name: 'Ink deep', hex: '#0A4A3A', className: 'bg-primary-deep' },
   { name: 'Accent CTA', hex: '#D85A30', className: 'bg-accent' },
-  { name: 'Page bg', hex: '#FDFBF7', className: 'bg-bg border border-border' },
-  { name: 'Tint', hex: '#E1F5EE', className: 'bg-primary-tint' },
+  { name: 'Paper bg', hex: '#FAF8F4', className: 'bg-bg border border-border' },
+  { name: 'Care panel', hex: '#E8F6F1', className: 'bg-care' },
   { name: 'Accent tint', hex: '#FAECE7', className: 'bg-accent-tint' },
 ]
 
@@ -106,14 +106,14 @@ export function DesignFoundationPage() {
           variants={fadeUp}
         >
           <p className="text-primary mb-3 text-sm font-medium tracking-wide">
-            Phase 2 · Component library
+            Next-level design system
           </p>
-          <h1 className="font-display max-w-2xl text-[1.75rem] leading-tight md:text-[2rem]">
-            ClinicEase design language
+          <h1 className="font-marketing max-w-2xl text-[2rem] leading-[1.15] md:text-[2.5rem]">
+            ClinicEase visual language
           </h1>
-          <p className="text-text-secondary mt-3 max-w-xl text-[15px] leading-relaxed md:text-base">
-            Living gallery for tokens and primitives. Portals will only compose what you see
-            here.
+          <p className="text-text-secondary mt-4 max-w-xl text-[15px] leading-relaxed md:text-base">
+            Award-caliber digital health — Fraunces marketing, Nunito product, Inter body, one
+            coral CTA, signature motion.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button leftIcon={<IconCalendarEvent size={18} stroke={1.5} />}>
@@ -145,8 +145,7 @@ export function DesignFoundationPage() {
           tone="accent"
           icon={<IconBell size={20} stroke={1.5} className="text-accent" />}
         >
-          Design system expanding — table, calendar, hour blocks, queue rows, charts, drawer,
-          toast.
+          Design system refreshed — Fraunces + Nunito + Inter, care panels, signature motion.
         </Banner>
 
         <motion.section
@@ -258,7 +257,7 @@ export function DesignFoundationPage() {
         </section>
 
         <section className="mb-14">
-          <h2 className="font-display mb-3 text-xl">Ledger inside a cockpit</h2>
+          <h2 className="font-display mb-3 text-xl">Ledger inside a calm admin view</h2>
           <Table
             rows={rows}
             rowKey={(r) => r.id}

@@ -27,34 +27,34 @@ function metaForPath(pathname: string) {
     return { title: 'Doctor profile', subtitle: 'Specialty, days, and booking' }
   }
   if (pathname.startsWith('/patient/book/')) {
-    return { title: 'Book a visit', subtitle: 'Hour block, intake, hold, and pay' }
+    return { title: 'Book a visit', subtitle: 'Pick a time, share a note, confirm' }
   }
   const map: Record<string, { title: string; subtitle: string }> = {
-    '/patient': { title: 'Your care today', subtitle: 'Next visit, live queue, and quick actions' },
-    '/patient/doctors': { title: 'Doctors', subtitle: 'Specialty, availability, and care fit' },
-    '/patient/book': { title: 'Book a visit', subtitle: 'Pick a doctor, hour block, then confirm' },
+    '/patient': { title: 'Your care today', subtitle: 'Next visit and live queue' },
+    '/patient/doctors': { title: 'Find a doctor', subtitle: 'Specialty and availability' },
+    '/patient/book': { title: 'Book a visit', subtitle: 'Choose who, then when' },
     '/patient/appointments': {
-      title: 'Appointments',
-      subtitle: 'Upcoming, history, and check-in',
+      title: 'Your visits',
+      subtitle: 'Upcoming, check-in, and history',
     },
     '/patient/waitlist': {
       title: 'Waitlist',
-      subtitle: 'Claim openings when capacity frees up',
+      subtitle: 'Claim a spot when one opens',
     },
     '/patient/notifications': {
-      title: 'Notifications',
-      subtitle: 'Reminders and live ETA updates',
+      title: 'Updates',
+      subtitle: 'Reminders and ETA shifts',
     },
     '/patient/dependents': {
-      title: 'Family profiles',
-      subtitle: 'Book on behalf of people you care for',
+      title: 'Family',
+      subtitle: 'Book for people you care for',
     },
     '/patient/profile': {
-      title: 'Profile',
-      subtitle: 'Account, WhatsApp link, and preferences',
+      title: 'You',
+      subtitle: 'Account and preferences',
     },
   }
-  return map[pathname] ?? { title: 'Patient', subtitle: 'Guided care journey' }
+  return map[pathname] ?? { title: 'Patient', subtitle: 'Guided care' }
 }
 
 export function PatientLayout() {

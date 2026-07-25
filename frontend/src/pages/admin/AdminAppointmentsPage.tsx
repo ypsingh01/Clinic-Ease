@@ -54,12 +54,12 @@ export function AdminAppointmentsPage() {
     doctors.find((d) => d.id === id)?.name ?? 'Doctor'
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <Banner tone="info">
         Live schedule from shared clinic bookings. Tap a cell to cancel or reschedule tokens.
       </Banner>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5">
         <FilterChip active={filter === 'all'} onClick={() => setFilter('all')} label="All doctors" />
         {active.map((d) => (
           <FilterChip
@@ -71,9 +71,9 @@ export function AdminAppointmentsPage() {
         ))}
       </div>
 
-      <Card padding="sm" className="overflow-x-auto">
+      <Card padding="md" className="overflow-x-auto shadow-[var(--shadow-soft)]">
         <div
-          className="grid min-w-[720px] gap-1 p-2"
+          className="grid min-w-[720px] gap-1.5 p-3"
           style={{
             gridTemplateColumns: `140px repeat(${HOURS.length}, minmax(72px, 1fr))`,
           }}
@@ -101,7 +101,7 @@ export function AdminAppointmentsPage() {
                     type="button"
                     onClick={() => setCell({ doctorId: d.id, hour })}
                     className={cn(
-                      'flex min-h-[64px] flex-col items-center justify-center rounded-[10px] border border-transparent px-1 py-2 text-center transition-transform hover:-translate-y-px',
+                      'flex min-h-[64px] flex-col items-center justify-center rounded-[var(--radius-control)] border border-transparent px-1 py-2 text-center transition-transform hover:-translate-y-px',
                       fill >= 1 && 'bg-accent-tint',
                     )}
                     style={
@@ -211,7 +211,7 @@ export function AdminAppointmentsPage() {
             <FormField className="mt-3" label="Hour block start" htmlFor="rs-block">
               <select
                 id="rs-block"
-                className="border-border bg-surface min-h-[44px] w-full rounded-[10px] border px-3 text-sm"
+                className="border-border bg-surface min-h-[44px] w-full rounded-[var(--radius-control)] border px-3 text-sm"
                 value={newBlock}
                 onChange={(e) => setNewBlock(e.target.value)}
               >
@@ -278,8 +278,8 @@ function FilterChip({
       onClick={onClick}
       className={
         active
-          ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-xs font-medium'
-          : 'border-border text-text-secondary rounded-full border bg-surface px-3 py-1.5 text-xs'
+          ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs font-medium'
+          : 'border-border text-text-secondary rounded-[var(--radius-pill)] border bg-surface px-3 py-1.5 text-xs'
       }
     >
       {label}

@@ -41,14 +41,15 @@ export function OtpPage() {
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-      <h1 className="font-display text-2xl font-medium">Enter OTP</h1>
+      <h1 className="font-display text-2xl font-medium tracking-tight">Enter OTP</h1>
       <p className="text-text-secondary mt-2 text-sm leading-relaxed">
         We sent a code to{' '}
         <span className="text-text font-medium">{displayPhone ?? 'your phone'}</span>.
-        Demo free-tier code: <span className="font-mono font-medium">123456</span>
+        On the free-tier demo, enter{' '}
+        <span className="font-mono font-medium">123456</span>.
       </p>
 
-      <Card className="mt-8" padding="lg">
+      <Card className="mt-8 shadow-[var(--shadow-soft)]" padding="lg">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <FormField label="One-time code" htmlFor="otp-code">
             <Input

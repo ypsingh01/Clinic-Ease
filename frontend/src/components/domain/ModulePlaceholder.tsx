@@ -46,7 +46,7 @@ export function ModulePlaceholder({
       </Card>
       <Card tint="primary" padding="lg" className="flex flex-col justify-between">
         <div>
-          <p className="text-primary text-xs font-medium tracking-wide uppercase">Coming in flow</p>
+          <p className="text-primary text-xs font-medium tracking-wide">Coming in flow</p>
           <p className="font-display mt-2 text-lg">Same visual language</p>
           <p className="text-text-secondary mt-2 text-sm leading-relaxed">
             This module will compose the design system — capacity blocks, live tokens, calm
@@ -73,7 +73,7 @@ export function StatTile({
   return (
     <Card padding="md" className="flex items-start gap-3">
       {icon ? (
-        <div className="bg-primary-tint text-primary flex size-10 shrink-0 items-center justify-center rounded-[10px]">
+        <div className="bg-primary-tint text-primary flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-control)]">
           {icon}
         </div>
       ) : null}

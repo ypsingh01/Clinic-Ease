@@ -65,7 +65,7 @@ export function AdminAnalyticsPage() {
   return (
     <ModulePlaceholder
       eyebrow="Analytics"
-      title="Doctor performance cockpit"
+      title="Doctor performance"
       description="Punctuality, busiest-hour heatmap, no-show trend, waitlist conversion — FR18 & FR28."
     />
   )

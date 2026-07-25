@@ -68,9 +68,9 @@ export function LoginPage() {
 
   return (
     <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-      <h1 className="font-display text-2xl font-medium">{t('auth.signIn')}</h1>
-      <p className="text-text-secondary mt-2 text-sm leading-relaxed">
-        Email password or phone OTP (WhatsApp-linked).
+      <h1 className="font-display text-2xl font-medium tracking-tight md:text-[1.75rem]">{t('auth.signIn')}</h1>
+      <p className="text-text-secondary mt-2.5 text-sm leading-relaxed">
+        Sign in with email, or use phone OTP for WhatsApp reminders.
       </p>
 
       <div className="mt-6 flex gap-2">
@@ -79,8 +79,8 @@ export function LoginPage() {
           onClick={() => setMode('email')}
           className={
             mode === 'email'
-              ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-xs font-medium'
-              : 'border-border text-text-secondary rounded-full border px-3 py-1.5 text-xs'
+              ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs font-medium'
+              : 'border-border text-text-secondary rounded-[var(--radius-pill)] border bg-surface px-3 py-1.5 text-xs'
           }
         >
           Email
@@ -90,15 +90,15 @@ export function LoginPage() {
           onClick={() => setMode('phone')}
           className={
             mode === 'phone'
-              ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-xs font-medium'
-              : 'border-border text-text-secondary rounded-full border px-3 py-1.5 text-xs'
+              ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs font-medium'
+              : 'border-border text-text-secondary rounded-[var(--radius-pill)] border bg-surface px-3 py-1.5 text-xs'
           }
         >
           Phone OTP
         </button>
       </div>
 
-      <Card className="mt-4" padding="lg">
+      <Card className="mt-5 shadow-[var(--shadow-soft)]" padding="lg">
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           {mode === 'email' ? (
             <>
@@ -153,7 +153,7 @@ export function LoginPage() {
 
       {DEMO_LOGIN ? (
         <div className="mt-6">
-          <p className="text-text-muted mb-2 text-xs font-medium tracking-wide uppercase">
+          <p className="text-text-muted mb-2 text-xs font-medium">
             Continue as
           </p>
           <div className="grid grid-cols-3 gap-2">

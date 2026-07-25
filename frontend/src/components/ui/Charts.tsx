@@ -12,11 +12,18 @@ import { cn } from '@/lib/cn'
 
 type Point = { label: string; value: number }
 
+const CHART = {
+  grid: 'var(--color-border)',
+  muted: 'var(--color-text-muted)',
+  surface: 'var(--color-surface)',
+  primary: 'var(--color-primary)',
+}
+
 export function TrendChart({
   data,
   className,
   height = 220,
-  color = '#0F6E56',
+  color = CHART.primary,
 }: {
   data: Point[]
   className?: string
@@ -33,15 +40,15 @@ export function TrendChart({
               <stop offset="100%" stopColor={color} stopOpacity={0.02} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="#D3D1C7" strokeDasharray="3 6" vertical={false} />
+          <CartesianGrid stroke={CHART.grid} strokeDasharray="3 6" vertical={false} />
           <XAxis
             dataKey="label"
-            tick={{ fill: '#888780', fontSize: 11 }}
+            tick={{ fill: CHART.muted, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: '#888780', fontSize: 11 }}
+            tick={{ fill: CHART.muted, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             width={36}
@@ -49,9 +56,9 @@ export function TrendChart({
           <Tooltip
             contentStyle={{
               borderRadius: 10,
-              border: '1px solid #D3D1C7',
-              background: '#FFFFFF',
-              boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+              border: `1px solid ${CHART.grid}`,
+              background: CHART.surface,
+              boxShadow: 'var(--shadow-modal)',
               fontSize: 12,
             }}
           />
@@ -106,7 +113,7 @@ export function Heatmap({
                   title={`${day} ${hours[hi]}: ${v}`}
                   className="aspect-square rounded-[6px]"
                   style={{
-                    backgroundColor: `rgba(15, 110, 86, ${0.08 + intensity * 0.72})`,
+                    backgroundColor: `color-mix(in srgb, var(--color-primary) ${Math.round(8 + intensity * 72)}%, transparent)`,
                   }}
                 />
               )

@@ -31,7 +31,7 @@ export function AdminNotificationsPage() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+    <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
       <Card padding="lg">
         <h2 className="font-display text-xl">Compose broadcast</h2>
         <p className="text-text-secondary mt-1 text-sm">
@@ -48,7 +48,7 @@ export function AdminNotificationsPage() {
           <FormField label="Audience" htmlFor="ba">
             <select
               id="ba"
-              className="border-border bg-surface focus:border-primary min-h-[44px] w-full rounded-[10px] border px-3.5 text-[15px] focus:shadow-[var(--focus-ring)] focus:outline-none"
+              className="border-border bg-surface focus:border-primary min-h-[44px] w-full rounded-[var(--radius-control)] border px-3.5 text-[15px] focus:shadow-[var(--focus-ring)] focus:outline-none"
               value={audience}
               onChange={(e) => setAudience(e.target.value as typeof audience)}
             >
@@ -61,7 +61,7 @@ export function AdminNotificationsPage() {
         </form>
       </Card>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-5">
         <Banner tone="info">Delivery log is mocked — wire Twilio statuses in Phase 8.</Banner>
         {broadcasts.map((b) => (
           <Card key={b.id} padding="md">

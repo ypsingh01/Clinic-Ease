@@ -41,18 +41,17 @@ export function DoctorsPage() {
   })
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card padding="lg" tint="primary">
+    <div className="flex flex-col gap-8">
+      <Card padding="lg" tint="care">
         <div className="flex items-start gap-3">
-          <div className="bg-surface text-primary flex size-10 shrink-0 items-center justify-center rounded-[10px]">
+          <div className="bg-surface text-primary flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-control)] shadow-[var(--shadow-soft)]">
             <IconSparkles size={20} stroke={1.5} />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="font-display text-lg font-medium">Not sure who to see?</h2>
-            <p className="text-text-secondary mt-1 text-sm leading-relaxed">
-              Select symptoms for a specialty suggestion. This is guidance based on what
-              you&apos;ve described — not a medical diagnosis. For urgent symptoms, call the
-              clinic or emergency care.
+            <p className="text-text-secondary mt-1.5 text-sm leading-relaxed">
+              Tell us what you&apos;re feeling for a specialty suggestion. This is guidance —
+              not a diagnosis. For urgent symptoms, call the clinic or emergency care.
             </p>
             <ChipSelect
               className="mt-4"
@@ -92,8 +91,8 @@ export function DoctorsPage() {
               onClick={() => setSpecialty(sp as Specialty | 'All')}
               className={
                 specialty === sp
-                  ? 'bg-primary text-surface rounded-full px-3 py-1.5 text-xs font-medium'
-                  : 'border-border text-text-secondary hover:border-primary/30 rounded-full border bg-surface px-3 py-1.5 text-xs'
+                  ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-3 py-1.5 text-xs font-medium'
+                  : 'border-border text-text-secondary hover:border-primary/30 rounded-[var(--radius-pill)] border bg-surface px-3 py-1.5 text-xs'
               }
             >
               {sp}

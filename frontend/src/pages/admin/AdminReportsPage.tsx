@@ -14,7 +14,7 @@ export function AdminReportsPage() {
   )
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-text-secondary max-w-xl text-sm leading-relaxed">
           Weekly clinic narrative — bookings, cancellations, no-shows, and waitlist conversion per
@@ -34,7 +34,7 @@ export function AdminReportsPage() {
         </Button>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
         <StatTile label="Bookings (week)" value={String(totals.bookings)} />
         <StatTile label="Cancellations" value={String(totals.cancels)} />
         <StatTile

@@ -1,28 +1,34 @@
-/* ClinicEase design tokens — see DESIGN.md */
+/* ClinicEase next-level design tokens — see DESIGN.md */
 
 :root {
-  /* Color */
+  /* Color — teal + coral DNA, elevated atmosphere */
   --color-primary: #0f6e56;
+  --color-primary-deep: #0a4a3a;
   --color-primary-light: #5dcaa5;
   --color-primary-tint: #e1f5ee;
   --color-accent: #d85a30;
   --color-accent-tint: #faece7;
-  --color-bg: #fdfbf7;
+  --color-bg: #faf8f4;
   --color-surface: #ffffff;
-  --color-text: #2c2c2a;
-  --color-text-secondary: #5f5e5a;
-  --color-text-muted: #888780;
-  --color-border: #d3d1c7;
+  --color-text: #1a1a18;
+  --color-text-primary: #1a1a18;
+  --color-text-secondary: #5c5b56;
+  --color-text-muted: #8a8980;
+  --color-border: #e2e0d6;
   --color-success: #0f6e56;
   --color-success-tint: #e1f5ee;
   --color-warning: #9a6700;
   --color-warning-tint: #fff3cd;
   --color-danger: #b42318;
   --color-danger-tint: #fee4e2;
+  --color-overlay: rgba(26, 26, 24, 0.4);
+  --color-nav-hover: #f2f0ea;
+  --color-care: #e8f6f1;
 
-  /* Type */
+  /* Type — Fraunces marketing, Nunito product display, Inter body */
+  --font-marketing: 'Fraunces', 'Georgia', serif;
   --font-display: 'Nunito', system-ui, sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   /* Space (4px base) */
@@ -40,25 +46,30 @@
   --space-24: 6rem;
 
   /* Radius */
-  --radius-control: 10px;
-  --radius-card: 14px;
-  --radius-lg: 16px;
+  --radius-control: 12px;
+  --radius-card: 20px;
+  --radius-lg: 24px;
   --radius-pill: 9999px;
 
-  /* Motion */
-  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Motion — signature bands */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 120ms;
-  --duration-normal: 200ms;
+  --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 140ms;
+  --duration-normal: 260ms;
   --duration-slow: 320ms;
+  --duration-page: 300ms;
 
   /* Elevation */
-  --shadow-modal: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-soft: 0 1px 2px rgba(26, 26, 24, 0.04), 0 8px 24px rgba(26, 26, 24, 0.06);
+  --shadow-lift: 0 4px 20px rgba(15, 110, 86, 0.1);
+  --shadow-modal: 0 12px 40px rgba(26, 26, 24, 0.14);
 
   /* Layout */
-  --content-max: 1200px;
-  --control-height: 44px;
+  --content-max: 1120px;
+  --control-height: 48px;
   --focus-ring: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-primary);
+  --header-blur: saturate(1.2) blur(12px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -66,5 +77,6 @@
     --duration-fast: 0ms;
     --duration-normal: 0ms;
     --duration-slow: 0ms;
+    --duration-page: 0ms;
   }
 }

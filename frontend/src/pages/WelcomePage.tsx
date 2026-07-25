@@ -13,7 +13,7 @@ export function WelcomePage() {
   return (
     <>
       <SkipLink />
-      <div id="main-content" className="mx-auto flex min-h-dvh max-w-[1200px] flex-col px-6 py-8 md:px-8">
+      <div id="main-content" className="bg-bg text-text mx-auto flex min-h-dvh max-w-[var(--content-max)] flex-col px-6 py-10 md:px-8">
         <header className="flex items-center justify-between gap-4">
           <Logo />
           <div className="flex items-center gap-2">
@@ -39,12 +39,12 @@ export function WelcomePage() {
           variants={fadeUp}
         >
           <p className="text-primary text-sm font-medium tracking-wide">ClinicEase</p>
-          <h1 className="font-display mt-3 max-w-2xl text-3xl leading-tight font-medium md:text-4xl">
+          <h1 className="font-marketing mt-3 max-w-2xl text-3xl leading-[1.15] font-medium md:text-4xl">
             Your care, simplified
           </h1>
           <p className="text-text-secondary mt-4 max-w-xl text-base leading-relaxed">
-            Phase 3 is live: polished auth and role shells. Full marketing landing arrives next;
-            portals already have real navigation and lived-in home screens.
+            Next-level digital health craft — calm booking, live tokens, and clear portals for
+            patients, doctors, and clinic staff.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/login" className="no-underline">
@@ -53,13 +53,13 @@ export function WelcomePage() {
               </Button>
             </Link>
             <Link to="/dev/ui" className="no-underline">
-              <Button variant="ghost">View component library</Button>
+              <Button variant="secondary">View design system</Button>
             </Link>
           </div>
         </motion.div>
 
         <motion.div
-          className="grid gap-3 pb-10 sm:grid-cols-3"
+          className="grid gap-4 pb-12 sm:grid-cols-3"
           variants={staggerContainer}
           initial="hidden"
           animate="visible"
@@ -68,7 +68,7 @@ export function WelcomePage() {
             [
               ['Patient', 'Guided care journey', '/login'],
               ['Doctor', 'Live clinic command', '/login'],
-              ['Admin', 'Operations cockpit', '/login'],
+              ['Admin', 'Calm clinic operations', '/login'],
             ] as const
           ).map(([title, body]) => (
             <motion.div key={title} variants={staggerItem}>

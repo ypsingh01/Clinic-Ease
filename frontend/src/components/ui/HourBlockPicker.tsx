@@ -40,11 +40,11 @@ export function HourBlockPicker({ blocks, value, onChange, className }: HourBloc
               if (state === 'waitlist' || state === 'open') onChange(block.id)
             }}
             className={cn(
-              'border-border bg-surface rounded-[var(--radius-card)] border p-3.5 text-left transition-all duration-200',
+              'border-border bg-surface rounded-[var(--radius-card)] border p-3.5 text-left transition-[border-color,transform,background-color] duration-[var(--duration-normal)]',
               'focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none',
-              selected && 'border-primary bg-primary-tint/50 ring-primary/20 ring-1',
+              selected && 'border-primary bg-primary-tint/50 shadow-[var(--shadow-soft)] ring-1 ring-primary/20',
               state === 'full' && !selected && 'cursor-not-allowed opacity-55',
-              state !== 'full' && !selected && 'hover:border-primary/35 hover:-translate-y-px',
+              state !== 'full' && !selected && 'hover:border-primary/35 hover:-translate-y-0.5',
             )}
           >
             <div className="flex items-start justify-between gap-2">

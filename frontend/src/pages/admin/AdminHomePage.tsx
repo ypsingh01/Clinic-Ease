@@ -11,8 +11,8 @@ export function AdminHomePage() {
   const pendingPay = payments.filter((p) => p.status === 'pending').length
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="flex flex-col gap-10">
+      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile
           label="Bookings this week"
           value={String(weekBookings)}
@@ -39,9 +39,9 @@ export function AdminHomePage() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         <Card padding="lg">
-          <div className="mb-2 flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between">
             <h2 className="font-display text-lg">Booking trend</h2>
             <StatusPill tone="success">Healthy</StatusPill>
           </div>
@@ -54,7 +54,7 @@ export function AdminHomePage() {
       </div>
 
       <Card padding="lg">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-lg">Today by doctor</h2>
             <p className="text-text-secondary text-sm">Open the schedule grid for the full canvas.</p>
@@ -63,12 +63,15 @@ export function AdminHomePage() {
             Open schedule grid →
           </Link>
         </div>
-        <div className="grid gap-2 md:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-3">
           {doctors
             .filter((d) => d.active)
             .slice(0, 3)
             .map((d) => (
-              <div key={d.id} className="rounded-[12px] border border-border bg-[#F7F5F0] p-3">
+              <div
+                key={d.id}
+                className="border-border bg-nav-hover rounded-[var(--radius-card)] border p-4 shadow-[var(--shadow-soft)]"
+              >
                 <p className="text-sm font-medium">{d.name}</p>
                 <p className="text-text-muted mt-1 text-xs">{d.tokensToday} tokens today</p>
                 <div className="mt-3 flex gap-1">

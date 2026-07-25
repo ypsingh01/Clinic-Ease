@@ -11,7 +11,7 @@ import {
   StatusPill,
 } from '@/components/ui'
 import { SYMPTOM_MAP, type Specialty } from '@/api/mocks/patientData'
-import { useClinic } from '@/clinic/ClinicEngineContext'
+import { useClinic } from '@/clinic/ApiClinicProvider'
 import { staggerContainer, staggerItem } from '@/motion/variants'
 
 export function DoctorsPage() {
@@ -123,7 +123,7 @@ export function DoctorsPage() {
               </div>
               <p className="text-text-secondary mt-3 flex-1 text-sm leading-relaxed">{d.bio}</p>
               <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <StatusPill tone="neutral">{d.availableDays.join(' · ')}</StatusPill>
+                <StatusPill tone="neutral">{(d.availableDays ?? []).join(' · ') || 'Days TBA'}</StatusPill>
                 <Link to={`/patient/book/${d.id}`} className="no-underline">
                   <Button size="sm">Book</Button>
                 </Link>

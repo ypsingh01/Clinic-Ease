@@ -214,9 +214,10 @@ function Hero({ bookTo, reduceMotion }: { bookTo: string; reduceMotion: boolean 
   return (
     <section
       id="home"
-      className="relative overflow-hidden px-6 pt-8 pb-20 md:px-8 md:pt-12 md:pb-28"
+      className="relative overflow-hidden px-5 pt-6 pb-16 sm:px-6 sm:pt-8 sm:pb-20 lg:px-8 lg:pt-12 lg:pb-28"
       onMouseMove={(e) => {
         if (reduceMotion || window.matchMedia('(pointer: coarse)').matches) return
+        if (window.matchMedia('(max-width: 1023px)').matches) return
         const r = e.currentTarget.getBoundingClientRect()
         mx.set(((e.clientX - r.left) / r.width) * 2 - 1)
         my.set(((e.clientY - r.top) / r.height) * 2 - 1)
@@ -224,17 +225,51 @@ function Hero({ bookTo, reduceMotion }: { bookTo: string; reduceMotion: boolean 
     >
       <motion.div
         aria-hidden
-        className="bg-primary/15 pointer-events-none absolute -top-24 -left-16 size-[320px] rounded-full blur-3xl"
+        className="bg-primary/15 pointer-events-none absolute -top-24 -left-16 size-[220px] rounded-full blur-3xl max-lg:mobile-pause-blobs sm:size-[280px] lg:size-[320px]"
         style={reduceMotion ? undefined : { x: blobX, y: blobY }}
       />
       <motion.div
         aria-hidden
-        className="bg-accent/15 pointer-events-none absolute top-32 -right-20 size-[280px] rounded-full blur-3xl"
+        className="bg-accent/15 pointer-events-none absolute top-24 -right-16 size-[180px] rounded-full blur-3xl max-lg:mobile-pause-blobs sm:size-[240px] lg:top-32 lg:-right-20 lg:size-[280px]"
         style={reduceMotion ? undefined : { x: blob2X, y: blob2Y }}
       />
 
-      <div className="relative mx-auto grid max-w-[var(--content-max)] items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-        <div>
+      <div className="relative mx-auto flex max-w-[var(--content-max)] flex-col gap-10 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12">
+        {/* Photo first on mobile */}
+        <motion.div
+          className="relative order-1 mx-auto w-full max-w-lg lg:order-2"
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.55, delay: 0.1 }}
+        >
+          <div className="border-border relative overflow-hidden rounded-[24px] border bg-surface shadow-[var(--shadow-lift)] sm:rounded-[28px]">
+            <img
+              src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=1200&q=80"
+              alt="Doctor consulting with a patient in a calm clinic"
+              className="aspect-[4/5] w-full object-cover sm:aspect-[5/6]"
+            />
+            <div className="from-primary-deep/50 absolute inset-0 bg-gradient-to-t to-transparent via-transparent" />
+          </div>
+          <motion.div
+            className="border-border bg-surface absolute -bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2.5 rounded-[var(--radius-pill)] border px-3.5 py-2.5 shadow-[var(--shadow-soft)] sm:left-6 sm:translate-x-0 lg:-bottom-4"
+            animate={
+              reduceMotion
+                ? undefined
+                : { opacity: [1, 0.85, 1], scale: [1, 1.02, 1] }
+            }
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <span className="relative flex size-2.5">
+              <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-40 max-lg:animate-none" />
+              <span className="bg-primary relative inline-flex size-2.5 rounded-full" />
+            </span>
+            <span className="text-text text-xs font-medium sm:text-sm">
+              Now serving Token <span className="font-mono">#14</span>
+            </span>
+          </motion.div>
+        </motion.div>
+
+        <div className="order-2 lg:order-1">
           <motion.p
             className="text-primary text-sm font-medium tracking-wide"
             initial={reduceMotion ? false : { opacity: 0, y: 12 }}
@@ -244,7 +279,7 @@ function Hero({ bookTo, reduceMotion }: { bookTo: string; reduceMotion: boolean 
             Digital clinic booking
           </motion.p>
           <motion.p
-            className="font-display text-primary mt-4 text-4xl font-semibold tracking-tight md:text-5xl"
+            className="font-display text-primary mt-3 text-[2rem] font-semibold tracking-tight sm:mt-4 sm:text-4xl lg:text-5xl"
             initial={reduceMotion ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.06 }}
@@ -252,7 +287,7 @@ function Hero({ bookTo, reduceMotion }: { bookTo: string; reduceMotion: boolean 
             Clinic<span className="text-accent">Ease</span>
           </motion.p>
           <motion.h1
-            className="font-marketing text-text mt-3 text-[2.35rem] leading-[1.08] font-medium md:text-[3.1rem]"
+            className="font-marketing text-text mt-2 text-[2.1rem] leading-[1.1] font-medium sm:mt-3 sm:text-[2.35rem] lg:text-[3.1rem] lg:leading-[1.08]"
             initial={reduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.12 }}
@@ -260,7 +295,7 @@ function Hero({ bookTo, reduceMotion }: { bookTo: string; reduceMotion: boolean 
             Your care, simplified
           </motion.h1>
           <motion.p
-            className="text-text-secondary mt-5 max-w-md text-base leading-relaxed md:text-lg"
+            className="text-text-secondary mt-4 max-w-md text-[15px] leading-relaxed sm:mt-5 sm:text-base lg:text-lg"
             initial={reduceMotion ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.2 }}
@@ -269,15 +304,16 @@ function Hero({ bookTo, reduceMotion }: { bookTo: string; reduceMotion: boolean 
             queue — without the phone tag.
           </motion.p>
           <motion.div
-            className="mt-8 flex flex-wrap items-center gap-5"
+            className="mt-7 flex flex-col gap-3 sm:mt-8 lg:flex-row lg:flex-wrap lg:items-center lg:gap-5"
             initial={reduceMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.32 }}
           >
-            <Link to={bookTo} className="no-underline">
+            <Link to={bookTo} className="w-full no-underline lg:w-auto">
               <Button
                 size="lg"
-                className="transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] hover:scale-[1.02]"
+                fullWidth
+                className="min-h-12 transition-[transform,box-shadow] duration-200 active:scale-[0.98] lg:w-auto lg:hover:-translate-y-0.5 lg:hover:shadow-[var(--shadow-lift)] lg:hover:scale-[1.02]"
                 rightIcon={<IconArrowRight size={18} stroke={1.5} />}
               >
                 Book appointment
@@ -285,50 +321,13 @@ function Hero({ bookTo, reduceMotion }: { bookTo: string; reduceMotion: boolean 
             </Link>
             <a
               href="#doctors"
-              className="group text-primary inline-flex items-center gap-1.5 text-sm font-medium no-underline"
+              className="text-primary inline-flex min-h-11 items-center justify-center gap-1.5 text-sm font-medium no-underline lg:justify-start"
             >
               Meet our doctors
-              <IconArrowRight
-                size={16}
-                stroke={1.5}
-                className="transition-transform duration-200 group-hover:translate-x-1"
-              />
+              <IconArrowRight size={16} stroke={1.5} />
             </a>
           </motion.div>
         </div>
-
-        <motion.div
-          className="relative mx-auto w-full max-w-lg"
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.55, delay: 0.18 }}
-        >
-          <div className="border-border relative overflow-hidden rounded-[28px] border bg-surface shadow-[var(--shadow-lift)]">
-            <img
-              src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?auto=format&fit=crop&w=1200&q=80"
-              alt="Doctor consulting with a patient in a calm clinic"
-              className="aspect-[4/5] w-full object-cover sm:aspect-[5/6]"
-            />
-            <div className="from-primary-deep/50 absolute inset-0 bg-gradient-to-t to-transparent via-transparent" />
-          </div>
-          <motion.div
-            className="border-border bg-surface absolute -bottom-4 left-4 flex items-center gap-2.5 rounded-[var(--radius-pill)] border px-3.5 py-2.5 shadow-[var(--shadow-soft)] sm:left-6"
-            animate={
-              reduceMotion
-                ? undefined
-                : { opacity: [1, 0.85, 1], scale: [1, 1.02, 1] }
-            }
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <span className="relative flex size-2.5">
-              <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-40" />
-              <span className="bg-primary relative inline-flex size-2.5 rounded-full" />
-            </span>
-            <span className="text-text text-xs font-medium sm:text-sm">
-              Now serving Token <span className="font-mono">#14</span>
-            </span>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   )
@@ -374,7 +373,7 @@ function CountUp({
   display?: string
 }) {
   const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0.8 })
+  const inView = useInView(ref, { once: true, amount: 0.35 })
   const [n, setN] = useState(0)
   useEffect(() => {
     if (!inView || display) return
@@ -397,13 +396,13 @@ function CountUp({
 
 function StatsBand() {
   return (
-    <section className="mx-auto max-w-[var(--content-max)] px-6 py-16 md:px-8 md:py-20" aria-label="Highlights">
+    <section className="mx-auto max-w-[var(--content-max)] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20" aria-label="Highlights">
       <motion.div
-        className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-3"
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
       >
         {STATS.map((s) => {
           const Icon = s.icon
@@ -411,7 +410,7 @@ function StatsBand() {
             <motion.div
               key={s.label}
               variants={reveal}
-              className="border-border bg-care/60 rounded-[var(--radius-card)] border px-5 py-6 shadow-[var(--shadow-soft)]"
+              className="border-border bg-care/60 rounded-[var(--radius-card)] border px-4 py-5 shadow-[var(--shadow-soft)] sm:px-5 sm:py-6"
             >
               <Icon size={20} stroke={1.5} className="text-primary mb-3" />
               <CountUp
@@ -420,7 +419,7 @@ function StatsBand() {
                 suffix={s.suffix}
                 display={'display' in s ? s.display : undefined}
               />
-              <p className="text-text-secondary mt-1 text-sm">{s.label}</p>
+              <p className="text-text-secondary mt-1 text-xs leading-snug sm:text-sm">{s.label}</p>
             </motion.div>
           )
         })}
@@ -431,35 +430,35 @@ function StatsBand() {
 
 function ServicesSection() {
   return (
-    <section id="services" className="mx-auto max-w-[var(--content-max)] px-6 py-16 md:px-8 md:py-24">
+    <section id="services" className="mx-auto max-w-[var(--content-max)] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
       <SectionIntro
         eyebrow="Services"
         title="Care across the specialties you need"
         body="One clinic, six doctors, clear capacity — so you book the right visit the first time."
       />
       <motion.div
-        className="mt-12 grid gap-4 md:grid-cols-6"
+        className="mt-10 flex flex-col gap-4 sm:mt-12 lg:grid lg:grid-cols-6 lg:gap-4"
         variants={staggerContainer}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
+        viewport={{ once: true, amount: 0.12 }}
       >
         {SPECIALTIES.map((s) => (
           <motion.div
             key={s.title}
             variants={staggerItem}
-            className={cn(s.featured ? 'md:col-span-3' : 'md:col-span-2')}
+            className={cn(s.featured ? 'lg:col-span-3' : 'lg:col-span-2')}
           >
             <div
               className={cn(
-                'border-border group h-full rounded-[var(--radius-card)] border bg-surface px-5 py-6 transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-[var(--shadow-lift)]',
-                s.featured && 'bg-care/40 md:min-h-[180px] md:px-7 md:py-8',
+                'border-border group h-full rounded-[var(--radius-card)] border bg-surface px-5 py-6 transition-[transform,border-color,box-shadow] duration-200 ease-out active:scale-[0.99] lg:hover:-translate-y-1 lg:hover:border-primary/40 lg:hover:shadow-[var(--shadow-lift)]',
+                s.featured && 'bg-care/40 lg:min-h-[180px] lg:px-7 lg:py-8',
               )}
             >
               <div
                 className={cn(
-                  'bg-primary-tint text-primary mb-4 flex size-10 items-center justify-center rounded-[var(--radius-control)] transition-transform duration-200 group-hover:-translate-y-0.5',
-                  s.featured && 'size-12',
+                  'bg-primary-tint text-primary mb-4 flex size-11 items-center justify-center rounded-[var(--radius-control)] transition-transform duration-200 lg:size-10 lg:group-hover:-translate-y-0.5',
+                  s.featured && 'lg:size-12',
                 )}
               >
                 <IconStethoscope size={s.featured ? 22 : 18} stroke={1.5} />
@@ -478,25 +477,25 @@ function ServicesSection() {
 
 function DoctorsSection({ bookTo }: { bookTo: string }) {
   return (
-    <section id="doctors" className="bg-primary/[0.035] py-16 md:py-24">
-      <div className="mx-auto max-w-[var(--content-max)] px-6 md:px-8">
+    <section id="doctors" className="bg-primary/[0.035] py-14 sm:py-16 lg:py-24">
+      <div className="mx-auto max-w-[var(--content-max)] px-5 sm:px-6 lg:px-8">
         <SectionIntro
           eyebrow="Doctors"
           title="A fixed roster you can trust"
           body="Specialties and available days — then real-time hour blocks when you book."
         />
         <motion.div
-          className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-4 md:overflow-visible"
+          className="-mx-5 mt-10 flex snap-x-mandatory gap-3 overflow-x-auto px-5 pb-3 sm:-mx-6 sm:mt-12 sm:gap-4 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.12 }}
         >
           {DOCTORS.map((d) => (
             <motion.div
               key={d.name}
               variants={staggerItem}
-              className="border-border group relative w-[78%] shrink-0 snap-center rounded-[var(--radius-card)] border bg-surface p-5 shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[var(--shadow-lift)] sm:w-[45%] md:w-auto"
+              className="border-border group relative w-[82%] shrink-0 snap-center-card rounded-[var(--radius-card)] border bg-surface p-5 shadow-[var(--shadow-soft)] transition-[transform,box-shadow] duration-200 active:scale-[0.99] sm:w-[58%] lg:w-auto lg:hover:-translate-y-1 lg:hover:shadow-[var(--shadow-lift)]"
             >
               <div className="relative mx-auto size-16">
                 <div className="from-primary via-primary-light to-accent absolute inset-0 rounded-full bg-gradient-to-br opacity-90 blur-[1px]" />
@@ -507,9 +506,10 @@ function DoctorsSection({ bookTo }: { bookTo: string }) {
               <h3 className="font-display mt-4 text-center text-[15px] font-medium">{d.name}</h3>
               <p className="text-primary mt-1 text-center text-sm">{d.specialty}</p>
               <p className="text-text-muted mt-2 text-center text-xs">{d.days}</p>
-              <div className="mt-4 max-h-0 overflow-hidden opacity-0 transition-all duration-200 group-hover:max-h-12 group-hover:opacity-100">
+              {/* Always visible on mobile (no hover); desktop keeps hover reveal */}
+              <div className="mt-4 max-lg:max-h-none max-lg:opacity-100 lg:max-h-0 lg:overflow-hidden lg:opacity-0 lg:transition-all lg:duration-200 lg:group-hover:max-h-12 lg:group-hover:opacity-100">
                 <Link to={bookTo} className="no-underline">
-                  <Button size="sm" fullWidth variant="secondary">
+                  <Button size="sm" fullWidth variant="secondary" className="min-h-11">
                     Book with {d.name.replace('Dr. ', '')}
                   </Button>
                 </Link>
@@ -522,16 +522,92 @@ function DoctorsSection({ bookTo }: { bookTo: string }) {
   )
 }
 
+const STEP_FEATURES = [
+  {
+    icon: IconTicket,
+    title: 'Token + ETA window',
+    body: 'Know your place without false precision.',
+    tint: 'care' as const,
+  },
+  {
+    icon: IconClockHour4,
+    title: 'Live queue',
+    body: 'See who is being served right now.',
+    tint: undefined,
+  },
+  {
+    icon: IconBrandWhatsapp,
+    title: 'WhatsApp updates',
+    body: 'Reminders and ETA shifts when the queue moves.',
+    tint: 'accent' as const,
+  },
+]
+
 function HowItWorks() {
+  const trackRef = useRef(null)
+  const inView = useInView(trackRef, { once: true, amount: 0.3 })
+  const reduceMotion = useReducedMotion()
+
   return (
-    <section id="about" className="mx-auto max-w-[var(--content-max)] px-6 py-16 md:px-8 md:py-24">
+    <section id="about" className="mx-auto max-w-[var(--content-max)] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
       <SectionIntro
         eyebrow="How it works"
         title="Three calm steps to your token"
         body="Built around hourly capacity — not exclusive single-patient slots that fight reality."
       />
-      <div className="relative mt-14">
-        <div className="bg-primary-light/40 absolute top-0 bottom-0 left-5 w-0.5 md:hidden" aria-hidden />
+
+      {/* Mobile: vertical steps + feature under each */}
+      <div ref={trackRef} className="relative mt-12 lg:hidden">
+        <div className="bg-primary-light/30 absolute top-2 bottom-2 left-[1.15rem] w-0.5 overflow-hidden" aria-hidden>
+          <motion.div
+            className="bg-primary-light h-full w-full origin-top"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: inView ? 1 : 0 }}
+            transition={reduceMotion ? { duration: 0.2 } : { duration: 0.9, ease: 'easeOut' }}
+          />
+        </div>
+        <div className="flex flex-col gap-10">
+          {STEPS.map((step, i) => {
+            const feat = STEP_FEATURES[i]
+            const FeatIcon = feat.icon
+            return (
+              <motion.div
+                key={step.n}
+                className="relative pl-12"
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.4, delay: reduceMotion ? 0 : i * 0.06 }}
+              >
+                <span className="bg-surface text-primary border-primary/20 absolute top-1 left-0 flex size-9 items-center justify-center rounded-full border text-xs font-semibold">
+                  {step.n}
+                </span>
+                <h3 className="font-display text-lg font-medium">{step.title}</h3>
+                <p className="text-text-secondary mt-2 text-sm leading-relaxed">{step.body}</p>
+                <div
+                  className={cn(
+                    'border-border mt-4 flex gap-3 rounded-[var(--radius-card)] border px-4 py-4',
+                    feat.tint === 'care' && 'bg-care/40',
+                    feat.tint === 'accent' && 'bg-accent-tint/40',
+                    !feat.tint && 'bg-surface',
+                  )}
+                >
+                  <div className="bg-primary-tint text-primary flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-control)]">
+                    <FeatIcon size={20} stroke={1.5} />
+                  </div>
+                  <div>
+                    <p className="font-display text-[15px] font-medium">{feat.title}</p>
+                    <p className="text-text-secondary mt-1 text-sm leading-relaxed">{feat.body}</p>
+                  </div>
+                </div>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Desktop (locked): original 3-col + feature strip */}
+      <div className="relative mt-14 hidden lg:block">
         <motion.div
           className="grid gap-10 md:grid-cols-3 md:gap-8"
           variants={staggerContainer}
@@ -540,39 +616,39 @@ function HowItWorks() {
           viewport={{ once: true, amount: 0.25 }}
         >
           {STEPS.map((step) => (
-            <motion.div key={step.n} variants={staggerItem} className="relative pl-10 md:pl-0 md:text-center">
-              <p className="font-display text-primary-light text-4xl font-medium md:text-5xl">{step.n}</p>
+            <motion.div key={step.n} variants={staggerItem} className="relative pl-0 text-center">
+              <p className="font-display text-primary-light text-5xl font-medium">{step.n}</p>
               <h3 className="font-display mt-3 text-lg font-medium">{step.title}</h3>
               <p className="text-text-secondary mt-2 text-sm leading-relaxed">{step.body}</p>
             </motion.div>
           ))}
         </motion.div>
+        <motion.div
+          className="border-border mt-14 grid gap-4 overflow-hidden rounded-[var(--radius-lg)] border bg-surface md:grid-cols-3"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={reveal}
+        >
+          <FeatureStrip
+            icon={<IconTicket size={22} stroke={1.5} />}
+            title="Token + ETA window"
+            body="Know your place without false precision."
+            tint="care"
+          />
+          <FeatureStrip
+            icon={<IconClockHour4 size={22} stroke={1.5} />}
+            title="Live queue"
+            body="See who is being served right now."
+          />
+          <FeatureStrip
+            icon={<IconBrandWhatsapp size={22} stroke={1.5} />}
+            title="WhatsApp updates"
+            body="Reminders and ETA shifts when the queue moves."
+            tint="accent"
+          />
+        </motion.div>
       </div>
-      <motion.div
-        className="border-border mt-14 grid gap-4 overflow-hidden rounded-[var(--radius-lg)] border bg-surface md:grid-cols-3"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={reveal}
-      >
-        <FeatureStrip
-          icon={<IconTicket size={22} stroke={1.5} />}
-          title="Token + ETA window"
-          body="Know your place without false precision."
-          tint="care"
-        />
-        <FeatureStrip
-          icon={<IconClockHour4 size={22} stroke={1.5} />}
-          title="Live queue"
-          body="See who is being served right now."
-        />
-        <FeatureStrip
-          icon={<IconBrandWhatsapp size={22} stroke={1.5} />}
-          title="WhatsApp updates"
-          body="Reminders and ETA shifts when the queue moves."
-          tint="accent"
-        />
-      </motion.div>
     </section>
   )
 }
@@ -581,6 +657,7 @@ function Testimonials() {
   const reduceMotion = useReducedMotion()
   const [hovered, setHovered] = useState<number | null>(null)
   const [entered, setEntered] = useState(false)
+  const [active, setActive] = useState(0)
   const clusterRef = useRef<HTMLDivElement>(null)
   const inView = useInView(clusterRef, { once: true, amount: 0.2 })
 
@@ -592,8 +669,8 @@ function Testimonials() {
   }, [inView, entered])
 
   return (
-    <section className="bg-care/40 py-16 md:py-24" aria-label="Patient stories">
-      <div className="mx-auto max-w-[var(--content-max)] px-6 md:px-8">
+    <section className="bg-care/40 py-14 sm:py-16 lg:py-24" aria-label="Patient stories">
+      <div className="mx-auto max-w-[var(--content-max)] px-5 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-xl text-center">
           <p className="text-primary text-sm font-medium tracking-wide">From patients</p>
           <h2 className="font-marketing text-text mt-2 text-3xl font-medium md:text-[2.15rem]">
@@ -604,9 +681,71 @@ function Testimonials() {
           </p>
         </div>
 
+        {/* Mobile: swipeable single card */}
+        <div className="mt-10 lg:hidden">
+          <motion.article
+            key={QUOTES[active].name}
+            className="border-border relative overflow-hidden rounded-[var(--radius-card)] border bg-surface px-6 pt-8 pb-6 shadow-[var(--shadow-soft)]"
+            drag={reduceMotion ? false : 'x'}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.18}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -60) setActive((v) => Math.min(QUOTES.length - 1, v + 1))
+              else if (info.offset.x > 60) setActive((v) => Math.max(0, v - 1))
+            }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16, rotate: -2 }}
+            animate={{ opacity: 1, y: 0, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+            whileDrag={reduceMotion ? undefined : { scale: 1.02, rotate: 2 }}
+          >
+            <span
+              aria-hidden
+              className="font-marketing text-primary/12 pointer-events-none absolute -top-3 left-3 select-none text-[7.5rem] leading-none"
+            >
+              “
+            </span>
+            <blockquote className="font-marketing text-text relative text-[1.15rem] leading-snug font-medium italic">
+              {QUOTES[active].quote}
+            </blockquote>
+            <div className="relative mt-6 flex items-center gap-3">
+              <div className="relative size-10 shrink-0">
+                <div className="from-primary via-primary-light to-accent absolute inset-0 rounded-full bg-gradient-to-br opacity-90 blur-[1px]" />
+                <div className="bg-primary-tint text-primary font-display absolute inset-[2px] flex items-center justify-center rounded-full text-xs font-medium">
+                  {QUOTES[active].initials}
+                </div>
+              </div>
+              <div>
+                <p className="text-text text-sm font-medium">{QUOTES[active].name}</p>
+                <p className="text-text-muted text-xs">{QUOTES[active].role}</p>
+              </div>
+            </div>
+          </motion.article>
+          <div className="mt-5 flex justify-center gap-2">
+            {QUOTES.map((q, idx) => (
+              <button
+                key={q.name}
+                type="button"
+                aria-label={`Quote ${idx + 1}`}
+                className={cn(
+                  'touch-target flex items-center justify-center rounded-full p-2',
+                )}
+                onClick={() => setActive(idx)}
+              >
+                <span
+                  className={cn(
+                    'block size-2 rounded-full transition-colors',
+                    idx === active ? 'bg-primary' : 'bg-border',
+                  )}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop cluster (locked) */}
         <div
           ref={clusterRef}
-          className="mt-12 flex flex-wrap justify-center gap-x-0 gap-y-8 md:mt-14 md:gap-y-10"
+          className="mt-12 hidden flex-wrap justify-center gap-x-0 gap-y-8 md:mt-14 md:gap-y-10 lg:flex"
           onMouseLeave={() => setHovered(null)}
         >
           {QUOTES.map((q, idx) => {
@@ -709,7 +848,7 @@ function FaqSection() {
         </p>
       </div>
 
-      <div ref={gridRef} className="mt-12 grid gap-4 sm:gap-5 md:grid-cols-2">
+      <div ref={gridRef} className="mt-10 grid grid-cols-1 gap-3.5 sm:mt-12 sm:gap-4 lg:grid-cols-2 lg:gap-5">
         {FAQS.map((f, idx) => {
           const isOpen = open === idx
           const IconCmp = f.icon
@@ -737,13 +876,13 @@ function FaqSection() {
             >
               <button
                 type="button"
-                className="flex w-full items-start gap-3.5 px-5 py-5 text-left"
+                className="flex min-h-[52px] w-full items-start gap-3.5 px-5 py-5 text-left active:opacity-90"
                 aria-expanded={isOpen}
                 onClick={() => setOpen(isOpen ? null : idx)}
               >
                 <span
                   className={cn(
-                    'flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-control)] transition-[background-color,color] duration-200',
+                    'flex size-11 shrink-0 items-center justify-center rounded-[var(--radius-control)] transition-[background-color,color] duration-200 sm:size-10',
                     isOpen
                       ? 'bg-primary text-white'
                       : 'bg-primary-tint text-primary',
@@ -794,20 +933,23 @@ function VisitSection({ bookTo }: { bookTo: string }) {
         className="from-bg pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b to-transparent"
         aria-hidden
       />
-      <div className="bg-primary relative pt-8 pb-20 text-white md:pt-10 md:pb-24">
+      <div className="bg-primary relative pt-8 pb-16 text-white sm:pb-20 lg:pt-10 lg:pb-24">
         <div
-          className="pointer-events-none absolute -top-20 left-1/2 size-[480px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(93,202,165,0.35),transparent_65%)]"
+          className="pointer-events-none absolute -top-20 left-1/2 size-[320px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(93,202,165,0.35),transparent_65%)] max-lg:opacity-70 lg:size-[480px]"
           aria-hidden
         />
-        <div className="relative mx-auto grid max-w-[var(--content-max)] gap-10 px-6 md:grid-cols-2 md:items-center md:px-8">
-          <div>
+        <div className="relative mx-auto flex max-w-[var(--content-max)] flex-col gap-8 px-5 sm:gap-10 sm:px-6 lg:grid lg:grid-cols-2 lg:items-center lg:px-8">
+          <div className="order-1 lg:order-2">
+            <ClinicMapArt />
+          </div>
+          <div className="order-2 lg:order-1">
             <p className="text-primary-light text-sm font-medium tracking-wide">Visit us</p>
-            <h2 className="font-marketing mt-3 text-3xl font-medium md:text-4xl">
+            <h2 className="font-marketing mt-3 text-[1.75rem] font-medium sm:text-3xl lg:text-4xl">
               One clinic. Clear hours. Easy to find.
             </h2>
-            <ul className="mt-8 space-y-4 text-sm text-white/85">
+            <ul className="mt-8 space-y-5 text-[15px] leading-relaxed text-white/85">
               <li className="flex gap-3">
-                <IconMapPin size={20} stroke={1.5} className="text-primary-light mt-0.5 shrink-0" />
+                <IconMapPin size={22} stroke={1.5} className="text-primary-light mt-0.5 shrink-0" />
                 <span>
                   12 Care Lane, Near City Park
                   <br />
@@ -815,23 +957,22 @@ function VisitSection({ bookTo }: { bookTo: string }) {
                 </span>
               </li>
               <li className="flex gap-3">
-                <IconPhone size={20} stroke={1.5} className="text-primary-light mt-0.5 shrink-0" />
+                <IconPhone size={22} stroke={1.5} className="text-primary-light mt-0.5 shrink-0" />
                 <span>+91 80 4000 1200 · Reception 8:00–20:00</span>
               </li>
               <li className="flex gap-3">
-                <IconClockHour4 size={20} stroke={1.5} className="text-primary-light mt-0.5 shrink-0" />
+                <IconClockHour4 size={22} stroke={1.5} className="text-primary-light mt-0.5 shrink-0" />
                 <span>Doctors by roster · Booked visits preferred</span>
               </li>
             </ul>
             <div className="mt-8">
-              <Link to={bookTo} className="no-underline">
-                <Button size="lg" className="bg-accent hover:brightness-105">
+              <Link to={bookTo} className="block no-underline lg:inline-block">
+                <Button size="lg" fullWidth className="bg-accent min-h-12 active:scale-[0.98] hover:brightness-105 lg:w-auto">
                   Book from the portal
                 </Button>
               </Link>
             </div>
           </div>
-          <ClinicMapArt />
         </div>
       </div>
     </section>
@@ -872,7 +1013,7 @@ function ClinicMapArt() {
 function SiteFooter({ bookTo }: { bookTo: string }) {
   return (
     <footer className="border-border from-primary/10 border-t bg-gradient-to-b to-bg">
-      <div className="mx-auto flex max-w-[var(--content-max)] flex-col gap-10 px-6 py-14 md:flex-row md:items-start md:justify-between md:px-8">
+      <div className="mx-auto flex max-w-[var(--content-max)] flex-col gap-10 px-5 py-12 sm:px-6 sm:py-14 lg:flex-row lg:items-start lg:justify-between lg:px-8">
         <div>
           <Logo />
           <p className="text-text-secondary mt-3 max-w-xs text-sm leading-relaxed">
@@ -880,7 +1021,7 @@ function SiteFooter({ bookTo }: { bookTo: string }) {
             practice.
           </p>
           <form
-            className="mt-5 flex max-w-sm gap-2"
+            className="mt-5 flex max-w-sm flex-col gap-2 sm:flex-row"
             onSubmit={(e) => e.preventDefault()}
             aria-label="Clinic updates"
           >
@@ -888,14 +1029,61 @@ function SiteFooter({ bookTo }: { bookTo: string }) {
               type="email"
               required
               placeholder="Email for clinic updates"
-              className="border-border bg-surface focus:border-primary min-h-11 flex-1 rounded-[var(--radius-control)] border px-3 text-sm outline-none focus:shadow-[var(--focus-ring)]"
+              className="border-border bg-surface focus:border-primary min-h-12 flex-1 rounded-[var(--radius-control)] border px-3 text-sm outline-none focus:shadow-[var(--focus-ring)]"
             />
-            <Button type="submit" size="sm" variant="secondary">
+            <Button type="submit" size="sm" variant="secondary" className="min-h-12 sm:min-h-11">
               Join
             </Button>
           </form>
         </div>
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+        {/* Mobile: single stacked list; desktop: 3 columns */}
+        <div className="flex flex-col gap-6 lg:hidden">
+          {[
+            {
+              title: 'Product',
+              links: [
+                { label: 'Book', to: bookTo },
+                { label: 'Sign in', to: '/login' },
+              ],
+            },
+            {
+              title: 'Clinic',
+              links: [
+                { label: 'Doctors', to: '#doctors' },
+                { label: 'Services', to: '#services' },
+                { label: 'Contact', to: '#contact' },
+              ],
+            },
+            {
+              title: 'Roles',
+              links: [
+                { label: 'Patient', to: '/login' },
+                { label: 'Doctor', to: '/login' },
+                { label: 'Admin', to: '/login' },
+              ],
+            },
+          ].map((col) => (
+            <div key={col.title}>
+              <p className="text-text text-sm font-medium">{col.title}</p>
+              <ul className="mt-2 space-y-1">
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    {l.to.startsWith('#') ? (
+                      <a href={l.to} className="text-text-secondary flex min-h-11 items-center text-sm no-underline">
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link to={l.to} className="text-text-secondary flex min-h-11 items-center text-sm no-underline">
+                        {l.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="hidden grid-cols-2 gap-8 sm:grid-cols-3 lg:grid">
           <FooterCol
             title="Product"
             links={[
@@ -922,7 +1110,7 @@ function SiteFooter({ bookTo }: { bookTo: string }) {
           />
         </div>
       </div>
-      <div className="border-border text-text-muted border-t px-6 py-4 text-center text-xs md:px-8">
+      <div className="border-border text-text-muted border-t px-5 py-4 text-center text-xs sm:px-6 lg:px-8">
         © {new Date().getFullYear()} ClinicEase · Built with care for local clinics
       </div>
     </footer>

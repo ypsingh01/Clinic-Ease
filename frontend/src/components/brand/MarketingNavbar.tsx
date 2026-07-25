@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { IconMenu2, IconX } from '@tabler/icons-react'
 import { BrandMark, BrandWordmark } from '@/components/brand/BrandMark'
 import { Button } from '@/components/ui'
 import { homePathForRole, useAuth } from '@/auth/AuthContext'
@@ -69,6 +70,8 @@ function NavActions({
   )
 }
 
+const spring = { type: 'spring' as const, stiffness: 380, damping: 32, mass: 0.85 }
+
 export function MarketingNavbar() {
   const { user, isAuthenticated } = useAuth()
   const { t } = useI18n()
@@ -100,74 +103,145 @@ export function MarketingNavbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const bar = (
-    <div className="mx-auto flex h-[72px] max-w-[var(--content-max)] items-center justify-between gap-4 px-6 md:px-8">
-      <Link
-        to="/"
-        className="group inline-flex items-center gap-2.5 no-underline"
-        aria-label="ClinicEase home"
-      >
-        <span className="inline-flex transition-transform duration-300 group-hover:scale-[1.04]">
-          <BrandMark size={36} className="group-hover:brand-mark-pulse" />
-        </span>
-        <BrandWordmark size="sm" />
-      </Link>
-      <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">
-        {NAV.map((item) => (
-          <NavLinkItem key={item.href} href={item.href} label={item.label} />
-        ))}
-      </nav>
-      <div className="flex items-center gap-2">
-        <NavActions bookTo={bookTo} />
-        <button
-          type="button"
-          className="text-text border-border hover:bg-primary-tint inline-flex size-10 items-center justify-center rounded-[var(--radius-control)] border md:hidden"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span className="font-display text-lg leading-none">{menuOpen ? '×' : '☰'}</span>
-        </button>
-      </div>
-    </div>
-  )
+  useEffect(() => {
+    if (!menuOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [menuOpen])
 
   return (
     <>
-      {/* Document-flow navbar — scrolls away (not sticky) */}
-      <header className="relative z-30 bg-transparent">
-        {bar}
-        {menuOpen ? (
-          <div className="border-border bg-bg/95 border-t px-6 py-4 backdrop-blur md:hidden">
-            <div className="flex flex-col gap-3">
-              <LanguageToggle className="border-border mb-1 flex w-fit items-center rounded-full border" />
-              {NAV.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="text-text py-1 text-sm font-medium no-underline"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ))}
-              <Link
-                to="/login"
-                className="text-primary text-sm font-medium no-underline"
-                onClick={() => setMenuOpen(false)}
-              >
-                {t('nav.signIn')}
-              </Link>
-            </div>
+      {/* —— Mobile top bar (logo + EN + menu) — desktop unchanged below —— */}
+      <header
+        className="relative z-30 bg-transparent lg:hidden"
+        style={{ paddingTop: 'var(--safe-top)' }}
+      >
+        <div className="safe-px flex h-14 items-center justify-between">
+          <Link to="/" className="inline-flex min-h-11 items-center gap-2 no-underline" aria-label="ClinicEase home">
+            <BrandMark size={32} />
+            <BrandWordmark size="sm" />
+          </Link>
+          <div className="flex items-center gap-2">
+            <LanguageToggle className="border-border flex items-center rounded-full border" />
+            <button
+              type="button"
+              className="border-border text-text touch-target inline-flex items-center justify-center rounded-[var(--radius-control)] border bg-surface active:scale-95"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(true)}
+            >
+              <IconMenu2 size={22} stroke={1.5} />
+            </button>
           </div>
-        ) : null}
+        </div>
       </header>
 
-      {/* Smart floating pill — scroll-up only */}
+      {/* Fullscreen mobile menu */}
+      <AnimatePresence>
+        {menuOpen ? (
+          <motion.div
+            className="fixed inset-0 z-[70] lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={reduceMotion ? { duration: 0.15 } : { duration: 0.22 }}
+          >
+            <div className="absolute inset-0 bg-bg/70 backdrop-blur-xl" aria-hidden />
+            <motion.div
+              className="bg-surface relative flex h-full flex-col px-6 pt-[max(1.25rem,var(--safe-top))] pb-[max(1.25rem,var(--safe-bottom))]"
+              initial={reduceMotion ? { opacity: 0 } : { y: '8%', opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={reduceMotion ? { opacity: 0 } : { y: '6%', opacity: 0 }}
+              transition={reduceMotion ? { duration: 0.15 } : spring}
+              role="dialog"
+              aria-modal
+              aria-label="Menu"
+            >
+              <div className="flex items-center justify-between">
+                <Link
+                  to="/"
+                  className="inline-flex items-center gap-2 no-underline"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <BrandMark size={36} />
+                  <BrandWordmark size="sm" />
+                </Link>
+                <button
+                  type="button"
+                  className="border-border touch-target inline-flex items-center justify-center rounded-[var(--radius-control)] border active:scale-95"
+                  aria-label="Close menu"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <IconX size={22} stroke={1.5} />
+                </button>
+              </div>
+
+              <nav className="mt-10 flex flex-1 flex-col gap-1" aria-label="Primary">
+                {NAV.map((item, i) => (
+                  <motion.a
+                    key={item.href}
+                    href={item.href}
+                    className="font-display text-text flex min-h-14 items-center rounded-[var(--radius-control)] px-2 text-2xl font-medium no-underline active:bg-care active:text-primary"
+                    onClick={() => setMenuOpen(false)}
+                    initial={reduceMotion ? false : { opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={reduceMotion ? { duration: 0.15 } : { ...spring, delay: 0.04 * i }}
+                  >
+                    {item.label}
+                  </motion.a>
+                ))}
+                <Link
+                  to={isAuthenticated && user ? homePathForRole(user.role) : '/login'}
+                  className="font-display text-primary mt-2 flex min-h-14 items-center px-2 text-xl font-medium no-underline"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {isAuthenticated && user ? 'Open portal' : t('nav.signIn')}
+                </Link>
+              </nav>
+
+              <div className="mt-auto space-y-4 pt-6">
+                <LanguageToggle className="border-border flex w-fit items-center rounded-full border" />
+                <Link to={bookTo} className="block no-underline" onClick={() => setMenuOpen(false)}>
+                  <Button size="lg" fullWidth className="min-h-13 active:scale-[0.98]">
+                    {t('nav.book')} appointment
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      {/* —— Desktop document-flow navbar (locked ≥1024px) —— */}
+      <header className="relative z-30 hidden bg-transparent lg:block">
+        <div className="mx-auto flex h-[72px] max-w-[var(--content-max)] items-center justify-between gap-4 px-6 md:px-8">
+          <Link
+            to="/"
+            className="group inline-flex items-center gap-2.5 no-underline"
+            aria-label="ClinicEase home"
+          >
+            <span className="inline-flex transition-transform duration-300 group-hover:scale-[1.04]">
+              <BrandMark size={36} className="group-hover:brand-mark-pulse" />
+            </span>
+            <BrandWordmark size="sm" />
+          </Link>
+          <nav className="flex items-center gap-8" aria-label="Primary">
+            {NAV.map((item) => (
+              <NavLinkItem key={item.href} href={item.href} label={item.label} />
+            ))}
+          </nav>
+          <NavActions bookTo={bookTo} />
+        </div>
+      </header>
+
+      {/* Smart floating pill — desktop / tablet scroll-up only; hide on small phones when menu owns nav */}
       <AnimatePresence>
         {floatVisible ? (
           <motion.div
-            className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-4"
+            className="pointer-events-none fixed inset-x-0 top-4 z-50 hidden justify-center px-4 sm:flex"
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
@@ -177,7 +251,7 @@ export function MarketingNavbar() {
               <Link to="/" className="shrink-0 no-underline" aria-label="ClinicEase home">
                 <BrandMark size={28} />
               </Link>
-              <nav className="hidden items-center gap-5 sm:flex" aria-label="Floating">
+              <nav className="hidden items-center gap-5 lg:flex" aria-label="Floating">
                 {NAV.slice(0, 4).map((item) => (
                   <NavLinkItem key={item.href} href={item.href} label={item.label} />
                 ))}

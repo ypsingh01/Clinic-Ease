@@ -33,6 +33,7 @@ export function DoctorLayout() {
   return (
     <AppShell
       items={items}
+      mobileNav={items}
       title={meta.title}
       subtitle={meta.subtitle}
       badge="Doctor"

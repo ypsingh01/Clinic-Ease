@@ -44,8 +44,21 @@ const titles: Record<string, { title: string; subtitle: string }> = {
 export function AdminLayout() {
   const { pathname } = useLocation()
   const meta = titles[pathname] ?? { title: 'Admin', subtitle: 'Calm clinic operations' }
+  const mobileNav: NavItem[] = [
+    items[0], // Overview
+    items[1], // Doctors
+    items[2], // Appointments
+    items[4], // Revenue
+  ]
   return (
-    <AppShell items={items} title={meta.title} subtitle={meta.subtitle} badge="Admin" dense>
+    <AppShell
+      items={items}
+      mobileNav={mobileNav}
+      title={meta.title}
+      subtitle={meta.subtitle}
+      badge="Admin"
+      dense
+    >
       <Outlet />
     </AppShell>
   )

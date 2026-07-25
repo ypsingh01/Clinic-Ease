@@ -60,8 +60,20 @@ function metaForPath(pathname: string) {
 export function PatientLayout() {
   const { pathname } = useLocation()
   const meta = metaForPath(pathname)
+  const mobileNav: NavItem[] = [
+    items[0], // Dashboard
+    items[1], // Doctors
+    items[3], // Appointments
+    items[7], // Profile
+  ]
   return (
-    <AppShell items={items} title={meta.title} subtitle={meta.subtitle} badge="Patient">
+    <AppShell
+      items={items}
+      mobileNav={mobileNav}
+      title={meta.title}
+      subtitle={meta.subtitle}
+      badge="Patient"
+    >
       <Outlet />
     </AppShell>
   )

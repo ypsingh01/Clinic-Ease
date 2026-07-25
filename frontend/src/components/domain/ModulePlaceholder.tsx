@@ -64,14 +64,16 @@ export function StatTile({
   value,
   hint,
   icon,
+  className,
 }: {
   label: string
   value: string
   hint?: string
   icon?: ReactNode
+  className?: string
 }) {
   return (
-    <Card padding="md" className="flex items-start gap-3">
+    <Card padding="md" className={cn('flex items-start gap-3', className)}>
       {icon ? (
         <div className="bg-primary-tint text-primary flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-control)]">
           {icon}
@@ -79,7 +81,7 @@ export function StatTile({
       ) : null}
       <div>
         <p className="text-text-muted text-xs font-medium">{label}</p>
-        <p className="font-display mt-1 text-xl font-medium">{value}</p>
+        <p className="font-display mt-1 text-xl font-medium max-lg:text-[1.65rem] max-lg:leading-tight">{value}</p>
         {hint ? <p className="text-text-secondary mt-0.5 text-xs">{hint}</p> : null}
       </div>
     </Card>

@@ -289,7 +289,7 @@ export function BookPage() {
         <Banner tone="accent">Waitlist claim — complete payment to lock this hour block.</Banner>
       ) : null}
 
-      <div className="border-border bg-surface/90 sticky top-[4.5rem] z-10 rounded-[var(--radius-card)] border p-4 shadow-[var(--shadow-soft)] backdrop-blur-md md:top-4">
+      <div className="border-border bg-surface/90 sticky top-[calc(4.25rem+var(--safe-top))] z-10 rounded-[var(--radius-card)] border p-4 shadow-[var(--shadow-soft)] backdrop-blur-md lg:top-4">
         <p className="text-text-muted mb-3 text-xs font-medium tracking-wide">
           Step {Math.min(stepIndex + 1, 4)} of 4 — almost there
         </p>
@@ -367,7 +367,7 @@ export function BookPage() {
               disabled={!selectedBlock || selectedBlock.state !== 'open'}
               onClick={() => setStep('intake')}
               fullWidth
-              className="lg:w-auto lg:self-start"
+              className="max-lg:sticky max-lg:bottom-[calc(var(--mobile-nav-h)+0.75rem)] max-lg:z-20 max-lg:shadow-[var(--shadow-lift)] lg:w-auto lg:self-start"
             >
               Continue to intake
             </Button>

@@ -86,8 +86,8 @@ export function LanguageToggle({ className }: { className?: string }) {
         onClick={() => setLocale('en')}
         className={
           locale === 'en'
-            ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-2.5 py-1 text-[11px] font-medium'
-            : 'text-text-secondary rounded-[var(--radius-pill)] px-2.5 py-1 text-[11px]'
+            ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-2.5 py-1 text-[11px] font-medium max-lg:min-h-11 max-lg:min-w-11 max-lg:px-3'
+            : 'text-text-secondary rounded-[var(--radius-pill)] px-2.5 py-1 text-[11px] max-lg:min-h-11 max-lg:min-w-11 max-lg:px-3'
         }
       >
         EN
@@ -97,8 +97,8 @@ export function LanguageToggle({ className }: { className?: string }) {
         onClick={() => setLocale('hi')}
         className={
           locale === 'hi'
-            ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-2.5 py-1 text-[11px] font-medium'
-            : 'text-text-secondary rounded-[var(--radius-pill)] px-2.5 py-1 text-[11px]'
+            ? 'bg-primary-tint text-primary border-primary/30 rounded-[var(--radius-pill)] border px-2.5 py-1 text-[11px] font-medium max-lg:min-h-11 max-lg:min-w-11 max-lg:px-3'
+            : 'text-text-secondary rounded-[var(--radius-pill)] px-2.5 py-1 text-[11px] max-lg:min-h-11 max-lg:min-w-11 max-lg:px-3'
         }
       >
         हिं

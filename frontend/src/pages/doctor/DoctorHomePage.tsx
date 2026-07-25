@@ -224,6 +224,7 @@ export function DoctorHomePage() {
               </FormField>
               <Button
                 size="sm"
+                className="max-lg:min-h-12"
                 leftIcon={<IconCheck size={16} stroke={1.5} />}
                 onClick={completeCurrent}
               >
@@ -232,6 +233,7 @@ export function DoctorHomePage() {
               <Button
                 size="sm"
                 variant="danger"
+                className="max-lg:min-h-12"
                 leftIcon={<IconUserOff size={16} stroke={1.5} />}
                 onClick={() => {
                   setStatus(activePatient.id, 'no_show')
@@ -245,6 +247,7 @@ export function DoctorHomePage() {
             <div className="mt-4">
               <Button
                 size="sm"
+                className="max-lg:min-h-12 max-lg:w-full"
                 leftIcon={<IconPlayerPlay size={16} stroke={1.5} />}
                 disabled={!live.some((p) => p.status === 'waiting')}
                 onClick={() => {
